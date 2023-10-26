@@ -2,7 +2,7 @@
   "ecs7": true,
   "runtimeVersion": "7",
   "display": {
-    "title": "camera-mode-testing",
+    "title": "testing",
     "description": "Test",
     "navmapThumbnail": "images/scene-thumbnail.png",
     "favicon": "favicon_asset"
@@ -31,5 +31,5 @@
     "ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE"
   ],
   "featureToggles": {},
-  "name": "camera-mode-testing"
+  "name": "mode-testing"
 }

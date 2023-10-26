@@ -19,4 +19,3 @@ test('CameraMode is ThirdPerson?', function* (context) {
     })
 })
 
-
