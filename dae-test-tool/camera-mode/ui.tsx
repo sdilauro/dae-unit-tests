@@ -1,9 +1,8 @@
-import { Transform, engine } from "@dcl/sdk/ecs"
-import { Color4, Vector3 } from "@dcl/sdk/math"
+import { Transform } from "@dcl/sdk/ecs"
+import { Color4 } from "@dcl/sdk/math"
 import ReactEcs, { Button, Label, UiEntity } from "@dcl/sdk/react-ecs"
-import { movePlayerTo } from "~system/RestrictedActions"
-import './index.test'
 import { lazyCreateEntity } from "../../utils/helpers"
+import './index.test'
 
 export const firstPersonEntity = lazyCreateEntity()
 export const thirdPersonEntity = lazyCreateEntity()
