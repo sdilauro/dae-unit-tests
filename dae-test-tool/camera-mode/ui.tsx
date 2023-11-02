@@ -18,8 +18,8 @@ let margin_top: number = 0
 
 engine.addSystem(() => {
   let canvas = UiCanvasInformation.get(engine.RootEntity)
-  margin_left = 500
-  margin_top = 500
+  margin_left = canvas.width - 15 - ui_width
+  margin_top = canvas.height - 15 - ui_height
 })
 
 export function setupUi() {
@@ -33,7 +33,7 @@ const ui = () => {
         uiTransform={{
           width: 285,
           height: 135,
-          margin: { top: margin_top, left: margin_left },
+          margin: { top: 500, left: 500 },
           display: 'flex',
           flexDirection: 'column',
         }}
