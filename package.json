@@ -1,6 +1,6 @@
 {
   "name": "dcl-project",
-  "version": "1.0.0",
+  "version": "protocol-squad",
   "description": "SDK7 Template scene",
   "scripts": {
     "build": "sdk-commands build --skip-install",
@@ -9,8 +9,8 @@
     "export-static": "sdk-commands export-static --destination static/ --realmName dae-unit-tests --baseUrl https://sdilauro.github.io/dae-unit-tests/ --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/dae-unit-tests"
   },
   "devDependencies": {
-    "@dcl/sdk": "latest",
-    "@dcl/js-runtime": "7.3.25"
+    "@dcl/js-runtime": "7.3.27-6735652561.commit-030c35f",
+    "@dcl/sdk": "^7.3.27-6735652561.commit-030c35f"
   },
   "engines": {
     "node": ">=16.0.0",
