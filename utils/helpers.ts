@@ -71,7 +71,7 @@ function createAddEntityFunction() {
 export const customAddEntity = createAddEntityFunction()
 
 export function createAreaMode(position: Vector3, rotationDegrees: number, areaRotationDegrees: number, text: string, subname: string, mode: CameraType, floorColor: Color4, areaColor: Color4, areaScale: Vector3) {
-    const obj: Record<string, any> = {};
+    const obj: Record<string, Entity> = {};
     //create center to manipulate entities
     obj['center' + subname] = customAddEntity.addEntity()
     Transform.create(obj['center' + subname], { position: position, rotation: Quaternion.fromAngleAxis(rotationDegrees, Vector3.Up()) })
