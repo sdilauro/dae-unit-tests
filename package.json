@@ -6,7 +6,7 @@
     "build": "sdk-commands build --skip-install",
     "deploy": "sdk-commands deploy",
     "start": "sdk-commands start",
-    "export-static": "sdk-commands export-static --destination static/ --realmName dae-unit-tests --baseUrl https://sdilauro.github.io/dae-unit-tests/ --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/dae-unit-tests"
+    "export-static": "sdk-commands export-static --destination static/ --realmName testing-gallery-seba --baseUrl BASEURL --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/testing-gallery-seba"
   },
   "devDependencies": {
     "@dcl/sdk": "latest",
