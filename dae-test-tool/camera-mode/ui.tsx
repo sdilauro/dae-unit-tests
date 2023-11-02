@@ -18,8 +18,8 @@ let margin_top: number = 0
 
 engine.addSystem(() => {
   let canvas = UiCanvasInformation.get(engine.RootEntity)
-  margin_left = canvas.width - 15 - ui_width
-  margin_top = canvas.height - 15 - ui_height
+  margin_left = 500
+  margin_top = 500
 })
 
 export function setupUi() {
