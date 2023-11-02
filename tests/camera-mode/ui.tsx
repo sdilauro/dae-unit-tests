@@ -1,8 +1,7 @@
-import { Transform, UiCanvasInformation, engine } from "@dcl/sdk/ecs"
+import { CameraMode, Transform, UiCanvasInformation, engine } from "@dcl/sdk/ecs"
 import { Color4 } from "@dcl/sdk/math"
 import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from "@dcl/sdk/react-ecs"
 import { lazyCreateEntity } from "../../utils/helpers"
-import './index.test'
 
 export const firstPersonEntity = lazyCreateEntity()
 export const thirdPersonEntity = lazyCreateEntity()
@@ -90,6 +89,14 @@ const ui = () => {
             onMouseDown={() => { handleOverlap() }}
             disabled={testStage == 5 ? false : true}
           />
+          <Button
+          
+            value="Camera Mode Log"
+            variant="primary"
+            uiTransform={{ width: 120, height: 20, margin: { left: 15, top: 10 } }}
+            onMouseDown={() => { printCameraMode() }}
+            
+          />
        
         
         </UiEntity>
@@ -135,6 +142,10 @@ const ui = () => {
 
       Transform.deleteFrom(overlapedEntity.get())
       testStage++
- 
+    }
+  
+    function printCameraMode() {
+      const camera = CameraMode.get(engine.CameraEntity)
+      console.log("Camera Mode: " + camera.mode)
     }
   }

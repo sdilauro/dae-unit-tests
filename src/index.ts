@@ -1,9 +1,10 @@
 export * from '@dcl/sdk'
-import { ReactEcsRenderer } from '@dcl/sdk/react-ecs'
-import { setupUi } from '../dae-test-tool/camera-mode/ui'
+import { setupUi } from '../tests/camera-mode/ui'
+import './index.test'
 
 export function main() {
     setupUi()
+
 }
 
 
