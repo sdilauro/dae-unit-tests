@@ -6,11 +6,21 @@
     "build": "sdk-commands build --skip-install",
     "deploy": "sdk-commands deploy",
     "start": "sdk-commands start",
-    "export-static": "sdk-commands export-static --destination static/ --realmName dae-unit-tests --baseUrl https://sdilauro.github.io/dae-unit-tests/ --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/dae-unit-tests"
+    "export-static": "sdk-commands export-static --destination static/ --realmName dae-unit-tests --baseUrl https://sdilauro.github.io/dae-unit-tests/ --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/dae-unit-tests",
+    "lint": "eslint src/**/*",
+    "lint:fix": "eslint --fix --ext .ts src/**/*",
+    "format": "prettier --config .prettierrc -c src/**/*",
+    "format:fix": "prettier -w src/**/*"
   },
   "devDependencies": {
     "@dcl/js-runtime": "7.3.27-6735652561.commit-030c35f",
-    "@dcl/sdk": "protocol-squad"
+    "@dcl/sdk": "protocol-squad",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "3.0.3"
   },
   "engines": {
     "node": ">=16.0.0",
