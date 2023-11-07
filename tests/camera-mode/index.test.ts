@@ -12,7 +12,7 @@ const areaColorFP: Color4 = Color4.create(1, 0, 0, 0.3)
 const floorColorTP: Color4 = Color4.Blue()
 const areaColorTP: Color4 = Color4.create(0, 0, 1, 0.3)
 
-test('FirstPerson', function* (context) {
+test('Camera mode must be 0', function* (context) {
   yield* waitTriggerTest(firstPersonEntity.get())
 
   //Delete old entities
@@ -32,7 +32,7 @@ test('FirstPerson', function* (context) {
   })
 })
 
-test('ThirdPerson', function* (context) {
+test('Camera mode must be 1', function* (context) {
   yield* waitTriggerTest(thirdPersonEntity.get())
 
   //Delete old entities
@@ -52,7 +52,7 @@ test('ThirdPerson', function* (context) {
   })
 })
 
-test('Scale no affect to cameraModeArea', function* (context) {
+test('Transform.scale should not has effect in cameraModeArea.area', function* (context) {
   yield* waitTriggerTest(scaledEntity.get())
 
   //Player is moved to origin where camera isn't forced
@@ -96,7 +96,7 @@ test('Scale no affect to cameraModeArea', function* (context) {
   })
 })
 
-test('Rotation affect to cameraModeArea', function* (context) {
+test('Transform.rotation should has effect in cameraModeArea.area', function* (context) {
   yield* waitTriggerTest(rotatedEntity.get())
 
   //Delete old entities
@@ -115,7 +115,7 @@ test('Rotation affect to cameraModeArea', function* (context) {
   })
 })
 
-test('CameraModeArea Overlaping', function* (context) {
+test('Camera mode must be 1 when mode of last one overlaped area is 1', function* (context) {
   yield* waitTriggerTest(overlapedEntity.get())
 
   //Delete old entities
