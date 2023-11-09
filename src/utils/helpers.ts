@@ -43,7 +43,9 @@ export function* assertMovePlayerTo(newRelativePosition: Vector3, cameraTarget: 
   assert(wasResolved, 'Move player to was not resolved')
 }
 
-export function lazyCreateEntity() {
+export function lazyCreateEntity() : {
+  get: () => Entity
+ }{
   let myEntity = engine.RootEntity
 
   function addSystem(): void {
@@ -60,7 +62,10 @@ export function lazyCreateEntity() {
   }
 }
 
-function createAddEntityFunction() {
+function createAddEntityFunction() : {
+  addEntity: () => Entity
+  clean: () => void
+ } {
   let arr: Entity[] = []
 
   return {
