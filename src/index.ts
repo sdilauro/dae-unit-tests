@@ -1,7 +1,6 @@
-export * from '@dcl/sdk'
-import { setupUi } from '../tests/camera-mode/ui'
-import '../tests/camera-mode/index.test'
+import { setupUi } from './tests/camera-mode/ui'
+import './tests/camera-mode/index.test'
 
-export function main() {
+export function main():void {
   setupUi()
 }

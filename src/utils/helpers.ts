@@ -10,18 +10,24 @@ import {
   engine
 } from '@dcl/sdk/ecs'
 import { Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
-import { assert } from '@dcl/sdk/testing/assert'
+import { assert } from './../testing/assert'
 import { movePlayerTo } from '~system/RestrictedActions'
 
-export function* waitTriggerTest(entity: Entity) {
+
+export function* waitTicksUntil(fn: () => bool): Generator<void> {
   Transform.create(entity, { position: Vector3.One() })
   while (true) {
-    if (Transform.getOrNull(entity) !== null) {
+    if (fn()) {
       yield
     } else {
       return
     }
   }
+}
+
+export function* waitTriggerTest(entity: Entity) {
+  Transform.create(entity, { position: Vector3.One() })
+  yield* waitTicksUntil(() => Transform.getOrNull(entity) !== null)
 }
 
 //this function is only for wait n ticks

@@ -3,23 +3,25 @@ import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { lazyCreateEntity } from '../../utils/helpers'
 
-export const firstPersonEntity = lazyCreateEntity()
-export const thirdPersonEntity = lazyCreateEntity()
-export const scaledEntity = lazyCreateEntity()
-export const rotatedEntity = lazyCreateEntity()
-export const overlapedEntity = lazyCreateEntity()
+// export const firstPersonEntity = lazyCreateEntity()
+// export const thirdPersonEntity = lazyCreateEntity()
+// export const scaledEntity = lazyCreateEntity()
+// export const rotatedEntity = lazyCreateEntity()
+// export const overlapedEntity = lazyCreateEntity()
+// export const overlapedEntity2 = lazyCreateEntity()
+export const startTestEntity = lazyCreateEntity()
 
-var testStage: number = 1
-const ui_width: number = 285
-const ui_height: number = 135
-let margin_left: number = 0
-let margin_top: number = 0
+// var testStage: number = 6
+// const ui_width: number = 285
+// const ui_height: number = 135
+// let margin_left: number = 0
+// let margin_top: number = 0
 
-engine.addSystem(() => {
-  let canvas = UiCanvasInformation.get(engine.RootEntity)
-  margin_left = canvas.width - 15 - ui_width
-  margin_top = canvas.height - 15 - ui_height
-})
+// engine.addSystem(() => {
+//   let canvas = UiCanvasInformation.get(engine.RootEntity)
+//   margin_left = canvas.width - 15 - ui_width
+//   margin_top = canvas.height - 15 - ui_height
+// })
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(ui)
@@ -30,14 +32,14 @@ const ui = () => {
     <UiEntity
       uiBackground={{ color: Color4.Black() }}
       uiTransform={{
-        width: 285,
-        height: 135,
-        margin: { top: 500, left: 500 },
+        width: 140,
+        height: 40,
+        margin: { top: 150, left: 400 },
         display: 'flex',
         flexDirection: 'column'
       }}
     >
-      <UiEntity
+      {/* <UiEntity
         uiTransform={{
           margin: { bottom: '5px' }
         }}
@@ -90,61 +92,71 @@ const ui = () => {
           margin: { bottom: '5px' }
         }}
       >
-        <Button
-          value="Overlap Areas"
+         <Button
+          value="Overlaped Areas"
           variant="primary"
           uiTransform={{ width: 120, height: 20, margin: { left: 15, top: 10 } }}
           onMouseDown={() => {
             handleOverlap()
           }}
           disabled={testStage == 5 ? false : true}
-        />
+        /> 
         <Button
-          value="Camera Mode Log"
+          value="Overlaped Areas 2"
           variant="primary"
           uiTransform={{ width: 120, height: 20, margin: { left: 15, top: 10 } }}
           onMouseDown={() => {
-            printCameraMode()
+            handleOverlap2()
           }}
+          disabled={false}
         />
-      </UiEntity>
-      <Label
-        uiTransform={{ margin: { top: 5 } }}
-        value="Press buttons to test."
-        fontSize={12}
-        font="serif"
-        textAlign="middle-center"
-      />
+      </UiEntity> */}
+      <Button
+          value="Start Tests"
+          variant="primary"
+          uiTransform={{ width: 120, height: 20, margin: { left: "10", top: 10 } }}
+          onMouseDown={() => {
+            handleStartTest()
+          }}
+        /> 
     </UiEntity>
   )
 
-  function handleFirstPerson() {
-    Transform.deleteFrom(firstPersonEntity.get())
-    testStage++
-  }
 
-  function handleThirdPerson() {
-    Transform.deleteFrom(thirdPersonEntity.get())
-    testStage++
-  }
+  function handleStartTest() {
+        Transform.deleteFrom(startTestEntity.get())
+      }
+//   function handleFirstPerson() {
+//     Transform.deleteFrom(firstPersonEntity.get())
+//     testStage++
+//   }
 
-  function handleScale() {
-    Transform.deleteFrom(scaledEntity.get())
-    testStage++
-  }
+//   function handleThirdPerson() {
+//     Transform.deleteFrom(thirdPersonEntity.get())
+//     testStage++
+//   }
 
-  function handleRotate() {
-    Transform.deleteFrom(rotatedEntity.get())
-    testStage++
-  }
+//   function handleScale() {
+//     Transform.deleteFrom(scaledEntity.get())
+//     testStage++
+//   }
 
-  function handleOverlap() {
-    Transform.deleteFrom(overlapedEntity.get())
-    testStage++
-  }
+//   function handleRotate() {
+//     Transform.deleteFrom(rotatedEntity.get())
+//     testStage++
+//   }
 
-  function printCameraMode() {
-    const camera = CameraMode.get(engine.CameraEntity)
-    console.log('Camera Mode: ' + camera.mode)
-  }
+//   function handleOverlap() {
+//     Transform.deleteFrom(overlapedEntity.get())
+//     testStage++
+//   }
+
+//   function handleOverlap2() {
+//     Transform.deleteFrom(overlapedEntity2.get())
+//     testStage++
+//   }
+//   function printCameraMode() {
+//     const camera = CameraMode.get(engine.CameraEntity)
+//     console.log('Camera Mode: ' + camera.mode)
+//   }
 }
