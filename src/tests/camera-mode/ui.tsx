@@ -1,6 +1,6 @@
-import { CameraMode, Transform, UiCanvasInformation, engine } from '@dcl/sdk/ecs'
+import { Transform } from '@dcl/sdk/ecs'
 import { Color4 } from '@dcl/sdk/math'
-import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { Button, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 import { lazyCreateEntity } from '../../utils/helpers'
 
 // export const firstPersonEntity = lazyCreateEntity()
@@ -23,11 +23,11 @@ export const startTestEntity = lazyCreateEntity()
 //   margin_top = canvas.height - 15 - ui_height
 // })
 
-export function setupUi() {
+export function setupUi(): void {
   ReactEcsRenderer.setUiRenderer(ui)
 }
 
-const ui = () => {
+const ui = (): ReactEcs.JSX.Element => {
   return (
     <UiEntity
       uiBackground={{ color: Color4.Black() }}
@@ -112,51 +112,50 @@ const ui = () => {
         />
       </UiEntity> */}
       <Button
-          value="Start Tests"
-          variant="primary"
-          uiTransform={{ width: 120, height: 20, margin: { left: "10", top: 10 } }}
-          onMouseDown={() => {
-            handleStartTest()
-          }}
-        /> 
+        value="Start Tests"
+        variant="primary"
+        uiTransform={{ width: 120, height: 20, margin: { left: '10', top: 10 } }}
+        onMouseDown={() => {
+          handleStartTest()
+        }}
+      />
     </UiEntity>
   )
 
+  function handleStartTest(): void {
+    Transform.deleteFrom(startTestEntity.get())
+  }
+  //   function handleFirstPerson() {
+  //     Transform.deleteFrom(firstPersonEntity.get())
+  //     testStage++
+  //   }
 
-  function handleStartTest() {
-        Transform.deleteFrom(startTestEntity.get())
-      }
-//   function handleFirstPerson() {
-//     Transform.deleteFrom(firstPersonEntity.get())
-//     testStage++
-//   }
+  //   function handleThirdPerson() {
+  //     Transform.deleteFrom(thirdPersonEntity.get())
+  //     testStage++
+  //   }
 
-//   function handleThirdPerson() {
-//     Transform.deleteFrom(thirdPersonEntity.get())
-//     testStage++
-//   }
+  //   function handleScale() {
+  //     Transform.deleteFrom(scaledEntity.get())
+  //     testStage++
+  //   }
 
-//   function handleScale() {
-//     Transform.deleteFrom(scaledEntity.get())
-//     testStage++
-//   }
+  //   function handleRotate() {
+  //     Transform.deleteFrom(rotatedEntity.get())
+  //     testStage++
+  //   }
 
-//   function handleRotate() {
-//     Transform.deleteFrom(rotatedEntity.get())
-//     testStage++
-//   }
+  //   function handleOverlap() {
+  //     Transform.deleteFrom(overlapedEntity.get())
+  //     testStage++
+  //   }
 
-//   function handleOverlap() {
-//     Transform.deleteFrom(overlapedEntity.get())
-//     testStage++
-//   }
-
-//   function handleOverlap2() {
-//     Transform.deleteFrom(overlapedEntity2.get())
-//     testStage++
-//   }
-//   function printCameraMode() {
-//     const camera = CameraMode.get(engine.CameraEntity)
-//     console.log('Camera Mode: ' + camera.mode)
-//   }
+  //   function handleOverlap2() {
+  //     Transform.deleteFrom(overlapedEntity2.get())
+  //     testStage++
+  //   }
+  //   function printCameraMode() {
+  //     const camera = CameraMode.get(engine.CameraEntity)
+  //     console.log('Camera Mode: ' + camera.mode)
+  //   }
 }

@@ -1,23 +1,13 @@
-import {
-  CameraMode,
-  CameraModeArea,
-  CameraType,
-  Entity,
-  Material,
-  MeshRenderer,
-  TextShape,
-  Transform,
-  engine
-} from '@dcl/sdk/ecs'
-import { Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
+import type { Entity, CameraType } from '@dcl/sdk/ecs'
+import type { Color4 } from '@dcl/sdk/math'
+import { CameraModeArea, Material, MeshRenderer, TextShape, Transform, engine } from '@dcl/sdk/ecs'
+import { Quaternion, Vector3 } from '@dcl/sdk/math'
 import { assert } from './../testing/assert'
 import { movePlayerTo } from '~system/RestrictedActions'
 
-
-export function* waitTicksUntil(fn: () => bool): Generator<void> {
-  Transform.create(entity, { position: Vector3.One() })
+export function* waitTicksUntil(fn: () => boolean): Generator<void> {
   while (true) {
-    if (fn()) {
+    if (!fn()) {
       yield
     } else {
       return
@@ -25,19 +15,19 @@ export function* waitTicksUntil(fn: () => bool): Generator<void> {
   }
 }
 
-export function* waitTriggerTest(entity: Entity) {
+export function* waitTriggerTest(entity: Entity): Generator<void> {
   Transform.create(entity, { position: Vector3.One() })
   yield* waitTicksUntil(() => Transform.getOrNull(entity) !== null)
 }
 
-//this function is only for wait n ticks
-export function* waitTicks(n: number) {
+// this function is only for wait n ticks
+export function* waitTicks(n: number): Generator<void> {
   for (let i: number = 0; i < n; i++) {
     yield
   }
 }
 
-export function* assertMovePlayerTo(newRelativePosition: Vector3, cameraTarget: Vector3) {
+export function* assertMovePlayerTo(newRelativePosition: Vector3, cameraTarget: Vector3): Generator<void> {
   let wasResolved: boolean = false
   movePlayerTo({
     newRelativePosition,
@@ -56,7 +46,7 @@ export function* assertMovePlayerTo(newRelativePosition: Vector3, cameraTarget: 
 export function lazyCreateEntity() {
   let myEntity = engine.RootEntity
 
-  function addSystem() {
+  function addSystem(): void {
     myEntity = customAddEntity.addEntity()
     engine.removeSystem(addSystem)
   }
@@ -100,12 +90,12 @@ export function createAreaMode(
   floorColor: Color4,
   areaColor: Color4,
   areaScale: Vector3
-) {
+): Record<string, Entity> {
   const obj: Record<string, Entity> = {}
-  //create center to manipulate entities
+  // create center to manipulate entities
   obj['center' + subname] = customAddEntity.addEntity()
   Transform.create(obj['center' + subname], {
-    position: position,
+    position,
     rotation: Quaternion.fromAngleAxis(rotationDegrees, Vector3.Up())
   })
 
@@ -122,9 +112,9 @@ export function createAreaMode(
 
   obj['text' + subname] = customAddEntity.addEntity()
   Transform.create(obj['text' + subname], { parent: obj['child' + subname], position: Vector3.create(0, 0, -0.01) })
-  TextShape.create(obj['text' + subname], { text: text, fontSize: 8 })
+  TextShape.create(obj['text' + subname], { text, fontSize: 8 })
 
-  //These entities declare and show the real area mode
+  // These entities declare and show the real area mode
   obj['cameraMode' + subname] = customAddEntity.addEntity()
   Transform.create(obj['cameraMode' + subname], {
     parent: obj['center' + subname],
@@ -132,7 +122,7 @@ export function createAreaMode(
     rotation: Quaternion.fromAngleAxis(areaRotationDegrees, Vector3.Up()),
     scale: areaScale
   })
-  CameraModeArea.create(obj['cameraMode' + subname], { area: Vector3.create(6, 4, 2), mode: mode })
+  CameraModeArea.create(obj['cameraMode' + subname], { area: Vector3.create(6, 4, 2), mode })
 
   obj['area' + subname] = customAddEntity.addEntity()
   Transform.create(obj['area' + subname], { parent: obj['cameraMode' + subname], scale: Vector3.create(6, 4, 2) })
