@@ -1,11 +1,12 @@
 import {
-  type Entity,
   Raycast,
   RaycastQueryType,
   RaycastResult,
-  Transform
+  Transform,
+  engine,
+  type Entity
 } from '@dcl/sdk/ecs'
-import { Vector3 } from '@dcl/sdk/math'
+import { Quaternion, Vector3 } from '@dcl/sdk/math'
 import { test } from './../../testing'
 import { assert, assertEquals } from './../../testing/assert'
 import { customAddEntity } from './../../utils/entity'
@@ -44,6 +45,7 @@ function* waitAndAssertTransformPosition(
   )
 
   // const globalPosition = getGlobalTransformPosition(entity) // TODO
+  // getGlobalTransform(entity)
   const globalPosition = mockedPosition
   const calculatedPosition = RaycastResult.get(entity).globalOrigin
   assertEquals(
@@ -94,4 +96,56 @@ test('should transform test-mechanism works well', function* (context) {
     '(test entity B with A as parent)',
     Vector3.create(2.3, 2.4, 2.5)
   )
+
+  let testEntityC = customAddEntity.addEntity()
+  Transform.create(testEntityC, {
+    position: Vector3.create(5, 5, 5),
+    rotation: Quaternion.fromAngleAxis(90, Vector3.Up())
+  })
+  const testEntityD = customAddEntity.addEntity()
+  Transform.create(testEntityD, {
+    position: Vector3.Forward(),
+    parent: testEntityC
+  })
+  yield* waitAndAssertTransformPosition(
+    testEntityD,
+    '(test entity D with C rotated as parent)',
+    Vector3.create(6, 5, 5)
+  )
+
+  engine.removeEntity(testEntityC)
+  yield* waitAndAssertTransformPosition(
+    testEntityD,
+    '(test entity D removing its parent)',
+    Vector3.create(0, 0, 1)
+  )
+
+  testEntityC = customAddEntity.addEntity()
+  Transform.create(testEntityC, {
+    position: Vector3.create(5, 5, 5),
+    scale: Vector3.create(2, 2, 2)
+  })
+  Transform.createOrReplace(testEntityD, {
+    position: Vector3.Forward(),
+    parent: testEntityC
+  })
+
+  yield* waitAndAssertTransformPosition(
+    testEntityD,
+    '(test entity D with C scaled as parent)',
+    Vector3.create(5, 5, 7)
+  )
+
+  engine.removeEntity(testEntityC)
+  yield* waitAndAssertTransformPosition(
+    testEntityD,
+    '(test entity D removing its parent)',
+    Vector3.create(0, 0, 1)
+  )
+
+  // assertEquals(
+  //   Array.from(dumpTree(engine.RootEntity)),
+  //   ['0', '└──testEntityA', '   └──testEntityB', '└──testEntityD'],
+  //   `tree failed`
+  // )
 })
