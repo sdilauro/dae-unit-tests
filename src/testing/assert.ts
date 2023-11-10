@@ -1,6 +1,9 @@
 // VERBATIM COPY OF https://github.com/LemonPi/deep-close-to
 
-import type { Entity, LastWriteWinElementSetComponentDefinition } from '@dcl/ecs'
+import type {
+  Entity,
+  LastWriteWinElementSetComponentDefinition
+} from '@dcl/ecs'
 
 const pSlice = Array.prototype.slice
 
@@ -8,8 +11,13 @@ const floatEpsilon = 0.0000001
 
 type Options = { strict: boolean; comp: typeof closeTo }
 
-export function assertEquals(a: any, b: any, message: string = 'Values are not equal') {
-  if (!deepCloseTo(a, b)) throw new Error(`${message} - ${JSON.stringify(a)} != ${JSON.stringify(b)}`)
+export function assertEquals(
+  a: any,
+  b: any,
+  message: string = 'Values are not equal'
+) {
+  if (!deepCloseTo(a, b))
+    throw new Error(`${message} - ${JSON.stringify(a)} != ${JSON.stringify(b)}`)
 }
 
 export function assert(a: any, message: string = 'assertion failed') {
@@ -21,11 +29,22 @@ export function assertComponentValue<T>(
   component: LastWriteWinElementSetComponentDefinition<T>,
   value: T
 ) {
-  assert(component.has(entity), `The entity doesn't have a ${component.componentName} component`)
-  assertEquals(component.get(entity)!, value, `Invalid ${component.componentName} values`)
+  assert(
+    component.has(entity),
+    `The entity doesn't have a ${component.componentName} component`
+  )
+  assertEquals(
+    component.get(entity)!,
+    value,
+    `Invalid ${component.componentName} values`
+  )
 }
 
-export function deepCloseTo(actual: any, expected: any, options: Partial<Options> = {}): boolean {
+export function deepCloseTo(
+  actual: any,
+  expected: any,
+  options: Partial<Options> = {}
+): boolean {
   const opts = Object.assign({}, { comp: closeTo }, options)
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {
@@ -35,7 +54,11 @@ export function deepCloseTo(actual: any, expected: any, options: Partial<Options
 
     // 7.3. Other pairs that do not both pass typeof value == 'object',
     // equivalence is determined by ==.
-  } else if (!actual || !expected || (typeof actual !== 'object' && typeof expected !== 'object')) {
+  } else if (
+    !actual ||
+    !expected ||
+    (typeof actual !== 'object' && typeof expected !== 'object')
+  ) {
     if (opts.strict) {
       if (!actual && !expected) {
         return actual === expected

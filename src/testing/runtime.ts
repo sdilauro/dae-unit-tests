@@ -10,7 +10,10 @@ import type { TestingModule, TestFunction, TestHelpers } from './types'
 // It takes a `TestingModule` instance (loaded from require('~system/Testing')) and an `IEngine` instance (from Decentraland's SDK).
 // It returns an object with a `test` function that can be used to define tests.
 /* @__PURE__ */
-export function createTestRuntime(testingModule: TestingModule, engine: IEngine) {
+export function createTestRuntime(
+  testingModule: TestingModule,
+  engine: IEngine
+) {
   type TestPlanEntry = { name: string; fn: TestFunction }
   type RunnerEnvironment = {
     resolve: () => void
@@ -49,7 +52,11 @@ export function createTestRuntime(testingModule: TestingModule, engine: IEngine)
   // this function schedules a value to be processed on the next frame, the test runner will
   // continue to run until it reaches a yield point
   function scheduleValue(value: any, env: RunnerEnvironment) {
-    if (value && typeof value === 'object' && typeof value.then === 'function') {
+    if (
+      value &&
+      typeof value === 'object' &&
+      typeof value.then === 'function'
+    ) {
       // console.log('⏱️ yield promise')
       // if the value is a promise, schedule it to be awaited after the current frame is finished
       nextTickFuture.push(async () => {
@@ -149,11 +156,21 @@ export function createTestRuntime(testingModule: TestingModule, engine: IEngine)
             await testingModule.setCameraTransform(transform)
             await nextTick()
 
-            const TransformComponent = engine.getComponent(Transform.componentId) as typeof Transform
+            const TransformComponent = engine.getComponent(
+              Transform.componentId
+            ) as typeof Transform
             const actualTransform = TransformComponent.get(engine.CameraEntity)
 
-            assertEquals(actualTransform.position, transform.position, "positions don't match")
-            assertEquals(actualTransform.rotation, transform.rotation, "rotations don't match")
+            assertEquals(
+              actualTransform.position,
+              transform.position,
+              "positions don't match"
+            )
+            assertEquals(
+              actualTransform.rotation,
+              transform.rotation,
+              "rotations don't match"
+            )
           }
         }
 
@@ -191,15 +208,20 @@ export function createTestRuntime(testingModule: TestingModule, engine: IEngine)
     if (!scheduledTests.length) return
 
     // inform the test runner about the plans for this test run
-    testingModule.plan({ tests: scheduledTests }).then(scheduleNextRun).catch(globalFail)
+    testingModule
+      .plan({ tests: scheduledTests })
+      .then(scheduleNextRun)
+      .catch(globalFail)
   })
 
   // this is the function that is used to plan a test functionn
   /* @__PURE__ */
   function test(name: string, fn: TestFunction) {
-    if (runtimeFrozen) throw new Error("New tests can't be added at this stage.")
+    if (runtimeFrozen)
+      throw new Error("New tests can't be added at this stage.")
 
-    if (scheduledTests.some(($) => $.name === name)) throw new Error(`Test with name ${name} already exists`)
+    if (scheduledTests.some(($) => $.name === name))
+      throw new Error(`Test with name ${name} already exists`)
 
     scheduledTests.push({ fn, name })
   }

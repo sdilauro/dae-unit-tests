@@ -8,9 +8,9 @@
     "start": "sdk-commands start",
     "export-static": "sdk-commands export-static --destination static/ --realmName dae-unit-tests --baseUrl https://sdilauro.github.io/dae-unit-tests/ --commsAdapter ws-room:ws-room-service.decentraland.org/rooms/dae-unit-tests",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "lint:fix": "eslint --fix --ext .ts src/**/*.{ts,tsx}",
+    "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "format": "prettier --config .prettierrc -c src/**/*.{ts,tsx}",
-    "format:fix": "prettier -w src/**/*.{ts,tsx}"
+    "format:fix": "prettier -w --config .prettierrc -c src/**/*.{ts,tsx}"
   },
   "devDependencies": {
     "@dcl/js-runtime": "7.3.27-6735652561.commit-030c35f",

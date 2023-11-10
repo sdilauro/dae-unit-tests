@@ -10,7 +10,9 @@ declare let require: any
  * @public
  */
 /* @__PURE__ */
-export const test: TestDefinitionFunction = DEBUG ? /* @__PURE__ */ createTestFunction() : /* @__PURE__ */ () => {}
+export const test: TestDefinitionFunction = DEBUG
+  ? /* @__PURE__ */ createTestFunction()
+  : /* @__PURE__ */ () => {}
 
 function createTestFunction() {
   let testingModule: TestingModule
@@ -19,7 +21,9 @@ function createTestFunction() {
   } catch (err) {
     console.error(err)
 
-    console.error(`🔴🚨‼️ WARNING: The test runner is not available. The test runner will be mocked. ‼️🚨🔴`)
+    console.error(
+      `🔴🚨‼️ WARNING: The test runner is not available. The test runner will be mocked. ‼️🚨🔴`
+    )
 
     testingModule = {
       async logTestResult(data) {

@@ -1,8 +1,17 @@
-import { CameraMode, CameraModeArea, EngineInfo, Transform, engine } from '@dcl/sdk/ecs'
+import {
+  CameraMode,
+  CameraModeArea,
+  EngineInfo,
+  Transform,
+  engine
+} from '@dcl/sdk/ecs'
 import { Color4, Vector3 } from '@dcl/sdk/math'
 import { test } from './../../testing'
 import { assertComponentValue } from './../../testing/assert'
-import { assertMovePlayerTo, createAreaMode, customAddEntity, waitTicks, waitTicksUntil } from './../../utils/helpers'
+import { waitTicks, waitTicksUntil } from './../../utils/waiters'
+import { customAddEntity } from './../../utils/entity'
+import { assertMovePlayerTo } from './../../utils/helpers'
+import { createAreaMode } from './../../utils/camera-mode-area'
 
 const sceneCenter: Vector3 = Vector3.create(8, 0, 8)
 const cameraTarget: Vector3 = Vector3.create(16, 1, 8)
@@ -26,7 +35,17 @@ test('camera-mode should be 0 (first-person) with camera area mode', function* (
   customAddEntity.clean()
 
   // Create a cameraModeArea with mode:0, centered on scene
-  createAreaMode(sceneCenter, 0, 0, 'First Person', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
+  createAreaMode(
+    sceneCenter,
+    0,
+    0,
+    'First Person',
+    'FirstPerson',
+    0,
+    floorColorFP,
+    areaColorFP,
+    Vector3.One()
+  )
 
   // Player is moved to inside of the cameraModeArea
   yield* assertMovePlayerTo(sceneCenter, cameraTarget)
@@ -46,7 +65,17 @@ test('camera-mode should be 0 (third-person) with camera area mode', function* (
   customAddEntity.clean()
 
   // Create a cameraModeArea with mode:1, centered on scene
-  createAreaMode(sceneCenter, 0, 0, 'Third Person', 'ThirdPerson', 1, floorColorTP, areaColorTP, Vector3.One())
+  createAreaMode(
+    sceneCenter,
+    0,
+    0,
+    'Third Person',
+    'ThirdPerson',
+    1,
+    floorColorTP,
+    areaColorTP,
+    Vector3.One()
+  )
 
   // Player is moved to inside of the cameraModeArea
   yield* assertMovePlayerTo(sceneCenter, cameraTarget)
@@ -109,7 +138,17 @@ test('transform.rotation should has effect in cameraModeArea.area', function* (c
   // Delete old entities
   customAddEntity.clean()
 
-  createAreaMode(sceneCenter, 0, 90, 'Rotated Area', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
+  createAreaMode(
+    sceneCenter,
+    0,
+    90,
+    'Rotated Area',
+    'FirstPerson',
+    0,
+    floorColorFP,
+    areaColorFP,
+    Vector3.One()
+  )
 
   // Player is moved to inside of the cameraModeArea (rotated 90° to the floor)
   yield* assertMovePlayerTo(Vector3.create(8, 0, 10), cameraTarget)
@@ -130,10 +169,30 @@ test('camera-mode should be 1(third-person) when mode of last one overlaped area
   yield* waitTicks(10)
 
   // Create area with mode: 0
-  createAreaMode(sceneCenter, 0, 0, 'First Person', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
+  createAreaMode(
+    sceneCenter,
+    0,
+    0,
+    'First Person',
+    'FirstPerson',
+    0,
+    floorColorFP,
+    areaColorFP,
+    Vector3.One()
+  )
   yield* waitTicks(10)
   // create area with mode: 1 overlaping the another area
-  createAreaMode(sceneCenter, 90, 0, 'Third Person', 'ThirdPerson', 1, floorColorTP, areaColorTP, Vector3.One())
+  createAreaMode(
+    sceneCenter,
+    90,
+    0,
+    'Third Person',
+    'ThirdPerson',
+    1,
+    floorColorTP,
+    areaColorTP,
+    Vector3.One()
+  )
 
   // Player is moved to origin
   yield* assertMovePlayerTo(Vector3.Zero(), cameraTarget)
@@ -157,15 +216,24 @@ test('cameraModeArea should alternate according the area wich player enters', fu
 
   const bigCameraAreaMode = customAddEntity.addEntity()
   Transform.create(bigCameraAreaMode, { position: sceneCenter })
-  CameraModeArea.create(bigCameraAreaMode, { area: Vector3.create(16, 4, 16), mode: 0 })
+  CameraModeArea.create(bigCameraAreaMode, {
+    area: Vector3.create(16, 4, 16),
+    mode: 0
+  })
 
   const mediumCameraAreaMode = customAddEntity.addEntity()
   Transform.create(mediumCameraAreaMode, { position: sceneCenter })
-  CameraModeArea.create(mediumCameraAreaMode, { area: Vector3.create(8, 4, 8), mode: 1 })
+  CameraModeArea.create(mediumCameraAreaMode, {
+    area: Vector3.create(8, 4, 8),
+    mode: 1
+  })
 
   const smallCameraAreaMode = customAddEntity.addEntity()
   Transform.create(smallCameraAreaMode, { position: sceneCenter })
-  CameraModeArea.create(smallCameraAreaMode, { area: Vector3.create(2, 4, 2), mode: 0 })
+  CameraModeArea.create(smallCameraAreaMode, {
+    area: Vector3.create(2, 4, 2),
+    mode: 0
+  })
 
   yield* waitTicks(10)
 

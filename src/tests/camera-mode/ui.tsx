@@ -1,7 +1,11 @@
 import { Transform } from '@dcl/sdk/ecs'
 import { Color4 } from '@dcl/sdk/math'
-import ReactEcs, { Button, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
-import { lazyCreateEntity } from '../../utils/helpers'
+import ReactEcs, {
+  Button,
+  ReactEcsRenderer,
+  UiEntity
+} from '@dcl/sdk/react-ecs'
+import { lazyCreateEntity } from '../../utils/entity'
 
 // export const firstPersonEntity = lazyCreateEntity()
 // export const thirdPersonEntity = lazyCreateEntity()
@@ -114,7 +118,11 @@ const ui = (): ReactEcs.JSX.Element => {
       <Button
         value="Start Tests"
         variant="primary"
-        uiTransform={{ width: 120, height: 20, margin: { left: '10', top: 10 } }}
+        uiTransform={{
+          width: 120,
+          height: 20,
+          margin: { left: '10', top: 10 }
+        }}
         onMouseDown={() => {
           handleStartTest()
         }}
