@@ -4,7 +4,12 @@
 
 import { IEngine, Transform } from '@dcl/ecs'
 import { assertEquals } from './assert'
-import type { TestingModule, TestFunction, TestHelpers } from './types'
+import type {
+  TestingModule,
+  TestFunction,
+  TestHelpers,
+  TestFunctionContext
+} from './types'
 
 // This function creates a test runtime that can be used to define and run tests.
 // It takes a `TestingModule` instance (loaded from require('~system/Testing')) and an `IEngine` instance (from Decentraland's SDK).
@@ -27,6 +32,7 @@ export function createTestRuntime(
 
   let currentFrameCounter = 0
   let currentFrameTime = 0
+  let currentTestNumber = 0
 
   // array to hold the scheduled tests
   const scheduledTests: TestPlanEntry[] = []
@@ -174,7 +180,13 @@ export function createTestRuntime(
           }
         }
 
-        const returnValue = entry.fn(testHelpers)
+        currentTestNumber += 1
+        const testContext: TestFunctionContext = {
+          helpers: testHelpers,
+          currentTestNumber
+        }
+
+        const returnValue = entry.fn(testContext)
 
         if (returnValue && typeof returnValue === 'object') {
           if (isGenerator(returnValue)) {
