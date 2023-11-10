@@ -2,6 +2,17 @@ import type { Entity } from '@dcl/sdk/ecs'
 import { Transform } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
 
+import { onSceneReadyObservable } from '@dcl/sdk/observables'
+
+let sceneIsReady = false
+onSceneReadyObservable.add(() => {
+  sceneIsReady = true
+})
+
+export const waitTicksSceneIsReady: () => Generator<void, void> = function* () {
+  yield* waitTicksUntil(() => sceneIsReady)
+}
+
 export function* waitTicksUntil(fn: () => boolean): Generator<void> {
   while (true) {
     if (!fn()) {

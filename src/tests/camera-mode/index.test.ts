@@ -21,7 +21,10 @@ const floorColorTP: Color4 = Color4.Blue()
 const areaColorTP: Color4 = Color4.create(0, 0, 1, 0.3)
 
 test('camera-mode should be 0 (first-person) with camera area mode', function* (context) {
+  // Comment the behavior below and uncomment this one to run the test manually
   // yield* waitTriggerTest(startTestEntity.get())
+
+  // Workaround until waitTicksSceneIsReady works
   yield* waitTicksUntil(() => {
     const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
     if (tickNumber > 100) {
@@ -30,6 +33,9 @@ test('camera-mode should be 0 (first-person) with camera area mode', function* (
       return false
     }
   })
+
+  // TODO: this should work, but it fails in the foundation client
+  // yield* waitTicksSceneIsReady()
 
   // Delete old entities
   customAddEntity.clean()
