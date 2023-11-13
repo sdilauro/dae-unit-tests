@@ -1,61 +1,55 @@
-// import {
-//   Transform,
-//   engine,
-//   type DeepReadonlyObject,
-//   type Entity,
-//   type TransformType
-// } from '@dcl/sdk/ecs'
-// import { Matrix } from '@dcl/sdk/math'
+import {
+  Transform,
+  engine,
+  type DeepReadonlyObject,
+  type Entity,
+  type TransformType
+} from '@dcl/sdk/ecs'
+import { Matrix } from '@dcl/sdk/math'
 
-// export function getGlobalTransform(entity: Entity): TransformType {
-//   const destTransform = Transform.schema.create()
-//   const transform = Transform.getOrNull(entity)
-//   // If the entity has no a transform, the Identity is resolved
-//   if (!transform) return destTransform
+export function getGlobalTransform(entity: Entity): TransformType {
+  const destTransform = Transform.schema.create()
+  const transform = Transform.getOrNull(entity)
+  // If the entity has no a transform, the Identity is resolved
+  if (transform === null) return destTransform
 
-//   const matrixs: Matrix.ReadonlyMatrix[] = []
-//   if (transform !== null) {
-//     matrixs.push(
-//       Matrix.compose(transform.position, transform.rotation, transform.scale)
-//     )
-//   }
+  const matrixs: Matrix.ReadonlyMatrix[] = []
+  if (transform !== null) {
+    matrixs.push(
+      Matrix.compose(transform.scale, transform.rotation, transform.position)
+    )
+  }
 
-//   let currentTransform: DeepReadonlyObject<TransformType> | null = transform
-//   while (
-//     currentTransform.parent &&
-//     currentTransform.parent !== engine.RootEntity
-//   ) {
-//     currentTransform = Transform.getOrNull(currentTransform.parent)
-//     if (currentTransform === null) break
+  let currentTransform: DeepReadonlyObject<TransformType> | null = transform
+  while (
+    currentTransform.parent !== null &&
+    currentTransform.parent !== undefined &&
+    currentTransform.parent !== engine.RootEntity
+  ) {
+    currentTransform = Transform.getOrNull(currentTransform.parent)
+    if (currentTransform === null) break
 
-//     const currentMatrix = Matrix.compose(
-//       currentTransform.position,
-//       currentTransform.rotation,
-//       currentTransform.scale
-//     )
-//     matrixs.push(currentMatrix)
-//   }
+    const currentMatrix = Matrix.compose(
+      currentTransform.scale,
+      currentTransform.rotation,
+      currentTransform.position
+    )
+    matrixs.push(currentMatrix)
+  }
 
-//   const currentMatrix = Matrix.compose(
-//     transform.position,
-//     transform.rotation,
-//     transform.scale
-//   )
-//   matrixs.push(currentMatrix)
+  let globalMatrix = Matrix.Identity()
+  for (const matrix of matrixs.reverse()) {
+    globalMatrix = Matrix.multiply(matrix, globalMatrix)
+  }
 
-//   let globalMatrix = Matrix.Identity()
-//   for (const matrix of matrixs.reverse()) {
-//     globalMatrix = Matrix.multiply(matrix, globalMatrix)
-//   }
-
-//   Matrix.decompose(
-//     globalMatrix,
-//     destTransform.position,
-//     destTransform.rotation,
-//     destTransform.scale
-//   )
-//   return destTransform
-// }
+  Matrix.decompose(
+    globalMatrix,
+    destTransform.scale,
+    destTransform.rotation,
+    destTransform.position
+  )
+  return destTransform
+}
 
 // export function* dumpTree(entity: Entity, depth: number = 0): Generator {
 //   yield '   '.repeat(Math.max(depth - 1, 0)) +
