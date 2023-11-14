@@ -7,7 +7,7 @@ export function lazyCreateEntity(): {
   let myEntity = engine.RootEntity
 
   function addSystem(): void {
-    myEntity = customAddEntity.addEntity()
+    myEntity = engine.addEntity()
     engine.removeSystem(addSystem)
   }
 
@@ -23,6 +23,8 @@ export function lazyCreateEntity(): {
 function createAddEntityFunction(): {
   addEntity: () => Entity
   clean: () => void
+  isEmpty: () => boolean
+  entities: () => Entity[]
 } {
   let arr: Entity[] = []
 
@@ -37,6 +39,12 @@ function createAddEntityFunction(): {
         engine.removeEntity(entity)
       }
       arr = []
+    },
+    isEmpty() {
+      return arr.length === 0
+    },
+    entities() {
+      return arr
     }
   }
 }

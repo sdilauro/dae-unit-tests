@@ -12,7 +12,14 @@ export type TestHelpers = {
   ): Promise<void>
 }
 
-export type TestFunction = (helpers: TestHelpers) => Generator | Promise<any>
+export type TestFunctionContext = {
+  helpers: TestHelpers
+  currentTestNumber: number
+}
+
+export type TestFunction = (
+  context: TestFunctionContext
+) => Generator | Promise<any>
 
 export type TestDefinitionFunction = (name: string, fn: TestFunction) => void
 

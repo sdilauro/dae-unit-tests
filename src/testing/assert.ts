@@ -7,7 +7,7 @@ import type {
 
 const pSlice = Array.prototype.slice
 
-const floatEpsilon = 0.0000001
+const floatEpsilon = 0.0001
 
 type Options = { strict: boolean; comp: typeof closeTo }
 
