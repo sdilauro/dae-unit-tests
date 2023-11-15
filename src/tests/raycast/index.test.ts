@@ -15,7 +15,7 @@ const [eA, eB, eC] = Array.from({ length: 3 }, () =>
 )
 
 test('raycast to anothers entity', function* (context) {
-  //An entity A with Raycast hits B and no C (because it hits all but C is in another layer)
+  // An entity A with Raycast hits B and no C (because it hits all but C is in another layer)
   Transform.create(eA, { position: Vector3.One() })
 
   Transform.create(eB, { position: Vector3.create(4, 1, 1) })
@@ -82,7 +82,7 @@ test('raycast to anothers entity', function* (context) {
   yield
 
   rayResult = RaycastResult.get(eA)
-  //console.log({ rayResult })
+  // console.log({ rayResult })
 
   assertEquals(
     rayResult.hits.length,
@@ -143,6 +143,14 @@ test('raycast to anothers entity', function* (context) {
 
   Transform.createOrReplace(eC, { position: Vector3.create(1, 1, 6) })
 
+  // TODO: review this issue in godot, the raycast sent is not hitting the two cubes
+  //  lean thinks that it's because the Physics Server doesn't apply the transform update
+  //  until a new physic's tick comes. this 'yield' is relative at scene-tick rate
+  //  in the godot case the scene has to wait as many ticks as physics tick fits in the scene-rate
+
+  yield
+  yield
+
   Raycast.createOrReplace(eA, {
     direction: {
       $case: 'localDirection',
@@ -162,6 +170,6 @@ test('raycast to anothers entity', function* (context) {
   assertEquals(
     rayResult.hits.length,
     2,
-    'raycast hits should be 2 when CollisionMask is 0xffffffff. '
+    'raycast hits should be 2 when CollisionMask is 0xffffffff.  '
   )
 })
