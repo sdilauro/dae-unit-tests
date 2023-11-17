@@ -1,7 +1,6 @@
 import {
   Billboard,
   CameraModeArea,
-  EngineInfo,
   MeshCollider,
   MeshRenderer,
   Raycast,
@@ -10,28 +9,23 @@ import {
   Transform,
   engine
 } from '@dcl/sdk/ecs'
-import { Quaternion, Vector3 } from '@dcl/sdk/math'
-import { assertComponentValue, assertEquals } from '../../testing/assert'
+import { Vector3 } from '@dcl/sdk/math'
+import { assertEquals } from '../../testing/assert'
 import { test } from './../../testing'
 import { customAddEntity } from './../../utils/entity'
+import { assertMovePlayerTo } from './../../utils/helpers'
 import { waitTicks } from './../../utils/waiters'
-import {
-  assertMovePlayerTo,
-  createChainedEntities
-} from './../../utils/helpers'
 
 const sceneCenter = Vector3.create(8, 1, 8)
+const cameraModeAreaE = engine.addEntity()
+Transform.create(cameraModeAreaE, { position: sceneCenter })
+CameraModeArea.create(cameraModeAreaE, {
+  area: Vector3.create(16, 5, 16),
+  mode: 0
+})
 
 test('billboard: billboard follows the camera', function* (context) {
   customAddEntity.clean()
-  //
-  const cameraModeAreaE = customAddEntity.addEntity()
-  Transform.create(cameraModeAreaE, { position: sceneCenter })
-  CameraModeArea.create(cameraModeAreaE, {
-    area: Vector3.create(16, 5, 16),
-    mode: 0
-  })
-
   const billboardEntity = customAddEntity.addEntity()
   Transform.create(billboardEntity, { position: sceneCenter })
   Billboard.create(billboardEntity)
@@ -83,3 +77,5 @@ test('billboard: billboard follows the camera', function* (context) {
     'raycast from billboarded entity should always hit the collider'
   )
 })
+
+engine.removeEntity(cameraModeAreaE)
