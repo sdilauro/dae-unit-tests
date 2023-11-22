@@ -10,13 +10,13 @@ test('engineInfo: testing engine information (tickNumber and quantity of propert
 
   console.log(EngineInfo.get(engine.RootEntity))
   const secondEngineInfo = EngineInfo.getOrNull(engine.RootEntity)
-  if (firstEngineInfo && secondEngineInfo) {
+  if (firstEngineInfo != null && secondEngineInfo != null) {
     assertEquals(
       secondEngineInfo.tickNumber,
       firstEngineInfo.tickNumber + 5,
       `ticknumber should be  ${firstEngineInfo.tickNumber + 5}`
     )
-    const keysArray: String[] = Object.keys(secondEngineInfo)
+    const keysArray: string[] = Object.keys(secondEngineInfo)
     const count: number = keysArray.length
     assertEquals(count, 3, `engineInfo should have 3 keys but it have ${count}`)
   }
