@@ -9,7 +9,7 @@ import { Vector3 } from '@dcl/sdk/math'
 import * as Testing from '~system/Testing'
 import { assertEquals } from '../../testing/assert'
 import { customAddEntity } from '../../utils/entity'
-import {
+import type {
   TakeAndCompareSnapshotRequest,
   TakeAndCompareSnapshotResponse
 } from '../../utils/snapshot-test'

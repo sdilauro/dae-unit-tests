@@ -1,11 +1,11 @@
 import {
   CameraModeArea,
-  Entity,
   Material,
   MeshRenderer,
   Transform,
   engine
 } from '@dcl/sdk/ecs'
+import type { Entity } from '@dcl/sdk/ecs'
 import { Color4, Quaternion, Vector3 } from '@dcl/sdk/math'
 
 function createWall(position: Vector3, rotation: Quaternion): Entity {
@@ -31,7 +31,7 @@ function createWall(position: Vector3, rotation: Quaternion): Entity {
   return wall
 }
 
-export function createBlackRoom() {
+export function createBlackRoom(): void {
   const cameraArea = engine.addEntity()
   Transform.create(cameraArea, { position: Vector3.create(8, 0, 8) })
   CameraModeArea.create(cameraArea, {
@@ -39,7 +39,10 @@ export function createBlackRoom() {
     mode: 0
   })
 
-  createWall(Vector3.create(8, .1, 8), Quaternion.fromAngleAxis(0, Vector3.Up()))
+  createWall(
+    Vector3.create(8, 0.1, 8),
+    Quaternion.fromAngleAxis(0, Vector3.Up())
+  )
   createWall(
     Vector3.create(8, 15, 8),
     Quaternion.fromAngleAxis(0, Vector3.Up())
