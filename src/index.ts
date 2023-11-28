@@ -1,4 +1,3 @@
-
 import { createBlackRoom } from './utils/black-room'
 import './tests/transform/index.test'
 import './tests/camera-mode/index.test'
