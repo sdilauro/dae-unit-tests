@@ -10,7 +10,6 @@ import { Color4, Vector3 } from '@dcl/sdk/math'
 import * as Testing from '~system/Testing'
 import { assertEquals } from '../../testing/assert'
 import { customAddEntity } from '../../utils/entity'
-import { assertMovePlayerTo } from '../../utils/helpers'
 import type {
   TakeAndCompareSnapshotRequest,
   TakeAndCompareSnapshotResponse
@@ -27,7 +26,6 @@ test('material blue emissiveIntensity:100: if exist a reference snapshot should 
       return false
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(1, 1, 1), Vector3.create(8, 2, 8))
 
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
@@ -46,15 +44,13 @@ test('material blue emissiveIntensity:100: if exist a reference snapshot should 
     emissiveColor: Color4.Blue(),
     emissiveIntensity: 100
   })
-
-  yield* waitTicks(15)
-
+  yield* waitTicks(5)
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 1',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
     cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -98,14 +94,14 @@ test('material blue with alpha: if exist a reference snapshot should match with 
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 2',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -155,14 +151,14 @@ test('material blue with texture: if exist a reference snapshot should match wit
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 3',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -171,7 +167,7 @@ test('material blue with texture: if exist a reference snapshot should match wit
 
   if (!result.wasExist) {
     Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
+      'This is the first  time the tool is run. The test took the reference snapshots for future testing.'
     )
   }
 
@@ -206,14 +202,14 @@ test('material blue with metallic:0 roghness:1 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 4',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -257,14 +253,14 @@ test('material blue with metallic:0.5 roghness:0.5 alphaTest:1: if exist a refer
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 5',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -308,14 +304,14 @@ test('material blue with metallic:0 roghness:0 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 6',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -359,14 +355,14 @@ test('material blue with metallic:1 roghness:0 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 7',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -413,14 +409,14 @@ test('material uv checker: if exist a reference snapshot should match with it', 
     }
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 8',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -474,14 +470,14 @@ test('material uv checker with transparency mode auto: if exist a reference snap
     transparencyMode: MaterialTransparencyMode.MTM_AUTO
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 9',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -536,14 +532,14 @@ test('material uv checker with transparency mode blend: if exist a reference sna
     castShadows: false
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 10',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -599,14 +595,14 @@ test('material transparency mode auto with emissive: if exist a reference snapsh
     emissiveIntensity: 150
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 11',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -653,14 +649,14 @@ test('material rock wall texture: if exist a reference snapshot should match wit
     }
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 12',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -713,14 +709,14 @@ test('material rock wall texture with bump texture: if exist a reference snapsho
     }
   })
 
-  yield* waitTicks(15)
+  yield* waitTicks(2)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'material 13',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -729,7 +725,7 @@ test('material rock wall texture with bump texture: if exist a reference snapsho
 
   if (!result.wasExist) {
     Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
+      'This is the first time the tool is run. The t est took the reference snapshots for future testing.'
     )
   }
 
