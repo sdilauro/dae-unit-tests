@@ -1,22 +1,15 @@
-import {
-  EngineInfo,
-  MeshRenderer,
-  PBMeshCollider_CylinderMesh,
-  Transform,
-  VisibilityComponent,
-  engine
-} from '@dcl/sdk/ecs'
+import { EngineInfo, MeshRenderer, Transform, engine } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
 import * as Testing from '~system/Testing'
 import { assertEquals } from '../../testing/assert'
 import { customAddEntity } from '../../utils/entity'
+import { assertMovePlayerTo } from '../../utils/helpers'
 import type {
   TakeAndCompareSnapshotRequest,
   TakeAndCompareSnapshotResponse
 } from '../../utils/snapshot-test'
 import { waitTicksUntil } from '../../utils/waiters'
 import { test } from './../../testing'
-import { assertMovePlayerTo } from '../../utils/helpers'
 
 test('mesh-renderer box: if exist a reference snapshot should match with it', function* (context) {
   yield* waitTicksUntil(() => {
@@ -111,7 +104,7 @@ test('mesh-renderer cylinder: if exist a reference snapshot should match with it
       cylinder: { radiusBottom: 1, radiusTop: 0.5 }
     }
   })
-  PBMeshCollider_CylinderMesh
+
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer cylinder',
     cameraPosition: Vector3.create(2, 2, 2),
@@ -146,7 +139,7 @@ test('mesh-renderer plane: if exist a reference snapshot should match with it', 
       plane: { uvs: [] }
     }
   })
-  PBMeshCollider_CylinderMesh
+
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer plane',
     cameraPosition: Vector3.create(2, 2, 2),
