@@ -8,7 +8,6 @@ import './tests/mesh-renderer/index.test'
 import './tests/material/index.test'
 import './tests/gltf-container/index.test'
 
-
 export function main(): void {
   createBlackRoom()
 }
