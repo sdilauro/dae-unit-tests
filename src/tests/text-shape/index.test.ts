@@ -31,15 +31,15 @@ test('text-shape default text: if exist a reference snapshot should match with i
   Transform.create(textEntity, {
     position: Vector3.create(8, 1, 8)
   })
-  TextShape.createOrReplace(textEntity, { text: 'Default text' })
+  TextShape.createOrReplace(textEntity, { text: 'Default text ' })
 
   yield* waitTicks(15)
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 1',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
@@ -72,9 +72,9 @@ test('text-shape colorized: if exist a reference snapshot should match with it',
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 2',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
@@ -108,9 +108,9 @@ test('text-shape outlined: if exist a reference snapshot should match with it', 
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 3',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
@@ -143,9 +143,9 @@ test('text-shape changed font: if exist a reference snapshot should match with i
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 4',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
@@ -178,9 +178,9 @@ test('text-shape align 1: if exist a reference snapshot should match with it', f
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 5',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
@@ -213,9 +213,9 @@ test('text-shape align 2: if exist a reference snapshot should match with it', f
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'text shape 5',
-    cameraPosition: Vector3.create(2, 2, 2),
+    cameraPosition: Vector3.create(8, 1, 7),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.99
   }
 
