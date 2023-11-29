@@ -43,10 +43,10 @@ test('visibility on: if exist a reference snapshot should match with it', functi
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'visibility true',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -77,11 +77,11 @@ test('visibility off: if exist a reference snapshot should match with it', funct
   VisibilityComponent.create(cube, { visible: false })
 
   const params: TakeAndCompareSnapshotRequest = {
-    id: 'visibility-false',
-    cameraPosition: Vector3.create(1, 1, 1),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    id: 'visibility false',
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
