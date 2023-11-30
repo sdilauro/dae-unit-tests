@@ -2,6 +2,7 @@ import { type Vector3 } from '@dcl/sdk/math'
 import { getExplorerInformation } from '~system/Runtime'
 import {
   takeAndCompareScreenshot,
+  type Vector2,
   type TakeAndCompareScreenshotRequest_ComparisonMethodGreyPixelDiff,
   type TakeAndCompareScreenshotResponse
 } from '~system/Testing'
@@ -20,9 +21,20 @@ function getMethodRequest(
     case 'grey-diff':
       return { greyPixelDiff: {} }
     default:
+
+
+
+
+
+    
       throw new Error('method not reached')
   }
 }
+
+
+
+
+
 
 function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCompareScreenshotResponse): void {
   switch (method.method) {
@@ -42,6 +54,7 @@ function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCom
 }
 
 export const DEFAULT_COMPARISON_METHOD: SnapshotComparisonMethod = { method: 'grey-diff', threshold: 0.9995 }
+export const DEFAULT_SCREENSHOT_SIZE: Vector2 = { x: 512, y: 512 }
 
 /**
  *
@@ -58,6 +71,7 @@ export async function assertSnapshot(
   name: string,
   cameraPosition: Vector3,
   cameraTarget: Vector3,
+  screenshotSize: Vector2 = DEFAULT_SCREENSHOT_SIZE,
   method: SnapshotComparisonMethod = DEFAULT_COMPARISON_METHOD
 ): Promise<void> {
   if (explorerAgent === 'unknown') {
@@ -72,7 +86,7 @@ export async function assertSnapshot(
     srcStoredSnapshot,
     cameraPosition,
     cameraTarget,
-    screenshotSize: { x: 512, y: 512 },
+    screenshotSize,
     ...getMethodRequest(method)
   })
 
