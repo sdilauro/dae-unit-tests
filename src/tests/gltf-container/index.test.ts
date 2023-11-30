@@ -16,7 +16,7 @@ test('gltfContainer: avocado model loads correctly', function* (context) {
     position: Vector3.create(8, 1, 8)
   })
   GltfContainer.create(avocado, {
-    src: 'src/models/avocado.glb'
+    src: 'src/assets/models/avocado.glb'
   })
 
   const params: TakeAndCompareSnapshotRequest = {
@@ -47,7 +47,7 @@ test('gltfContainer: H.E.V Mark IV model loads correctly', function* (context) {
     scale: Vector3.create(0.03, 0.03, 0.03)
   })
   GltfContainer.create(hev, {
-    src: 'src/models/hevmarkiv.glb'
+    src: 'src/assets/models/hevmarkiv.glb'
   })
 
   const params: TakeAndCompareSnapshotRequest = {

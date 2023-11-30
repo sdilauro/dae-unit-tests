@@ -10,7 +10,8 @@ import { createBlackRoom } from './utils/black-room'
 // import './tests/billboard/index.test'
 // import './tests/visibility/index.test'
 // import './tests/engine-info/index.test'
-import './tests/text-shape/index.test'
+// import './tests/text-shape/index.test'
+import './tests/animator/index.test'
 
 export function main(): void {
   createBlackRoom()
