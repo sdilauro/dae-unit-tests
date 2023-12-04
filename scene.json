@@ -26,7 +26,22 @@
       "default": true
     }
   ],
-  "requiredPermissions": ["ALLOW_TO_TRIGGER_AVATAR_EMOTE", "ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE"],
+  "requiredPermissions": [
+    "ALLOW_TO_TRIGGER_AVATAR_EMOTE",
+    "ALLOW_TO_MOVE_PLAYER_INSIDE_SCENE",
+    "ALLOW_MEDIA_HOSTNAMES"
+  ],
+  "allowedMediaHostnames": [
+    "www.youtube.com",
+    "www.youtu.be",
+    "player.vimeo.com",
+    "gateway.pinata.cloud",
+    "storage.googleapis.com",
+    "peer-lb.decentraland.org",
+    "kiosks.dclplazas.com",
+    "commondatastorage.googleapis.com",
+    "www.soundhelix.com"
+  ],
   "featureToggles": {},
   "name": "mode-testing"
 }

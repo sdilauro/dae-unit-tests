@@ -28,8 +28,8 @@ export const defaultParams: TakeAndCompareSnapshotRequest = {
   id: 'test-snapshot',
   cameraPosition: Vector3.create(1, 1, 1),
   cameraTarget: Vector3.create(1, 1, 2),
-  snapshotFrameSize: Vector3.create(1024, 1024),
-  tolerance: 0.8
+  snapshotFrameSize: Vector3.create(512, 512),
+  tolerance: 0.99
 }
 
 // way to use:

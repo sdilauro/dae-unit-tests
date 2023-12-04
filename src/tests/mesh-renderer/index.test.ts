@@ -37,10 +37,10 @@ test('mesh-renderer box: if exist a reference snapshot should match with it', fu
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer box',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -72,10 +72,10 @@ test('mesh-renderer sphere: if exist a reference snapshot should match with it',
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer sphere',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -107,10 +107,10 @@ test('mesh-renderer cylinder: if exist a reference snapshot should match with it
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer cylinder',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (
@@ -142,10 +142,10 @@ test('mesh-renderer plane: if exist a reference snapshot should match with it', 
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'mesh renderer plane',
-    cameraPosition: Vector3.create(2, 2, 2),
-    cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
-    tolerance: 0.8
+    cameraPosition: Vector3.create(6.5, 4, 6.5),
+    cameraTarget: Vector3.create(8, 2, 8),
+    snapshotFrameSize: Vector3.create(512, 512),
+    tolerance: 0.99
   }
 
   const result: TakeAndCompareSnapshotResponse = (

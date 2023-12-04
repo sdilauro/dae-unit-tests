@@ -1,8 +1,8 @@
 import {
+  Animator,
   EngineInfo,
-  MeshRenderer,
+  GltfContainer,
   Transform,
-  VisibilityComponent,
   engine
 } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
@@ -15,9 +15,8 @@ import type {
 } from '../../utils/snapshot-test'
 import { waitTicks, waitTicksUntil } from '../../utils/waiters'
 import { test } from './../../testing'
-import { assertMovePlayerTo } from '../../utils/helpers'
 
-test('visibility on: if exist a reference snapshot should match with it', function* (context) {
+test('animator track 1: if exist a reference snapshot should match with it', function* (context) {
   yield* waitTicksUntil(() => {
     const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
     if (tickNumber > 100) {
@@ -31,18 +30,23 @@ test('visibility on: if exist a reference snapshot should match with it', functi
   Transform.create(cube, {
     position: Vector3.create(8, 1, 8)
   })
-  MeshRenderer.create(cube, {
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
+  GltfContainer.create(cube, {
+    src: 'src/assets/models/animated_cube.glb'
   })
-  VisibilityComponent.create(cube, { visible: true })
-  yield* assertMovePlayerTo(Vector3.create(8, 1, 2), Vector3.create(8, 1, 8))
+  Animator.create(cube, {
+    states: [
+      {
+        clip: 'Static Pose',
+        playing: true,
+        shouldReset: true,
+        loop: true
+      }
+    ]
+  })
   yield* waitTicks(15)
 
   const params: TakeAndCompareSnapshotRequest = {
-    id: 'visibility true',
+    id: 'animator 1',
     cameraPosition: Vector3.create(6.5, 4, 6.5),
     cameraTarget: Vector3.create(8, 2, 8),
     snapshotFrameSize: Vector3.create(512, 512),
@@ -62,22 +66,38 @@ test('visibility on: if exist a reference snapshot should match with it', functi
   assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
 })
 
-test('visibility off: if exist a reference snapshot should match with it', function* (context) {
+test('animator track 2: if exist a  reference snapshot should match with it', function* (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
     position: Vector3.create(8, 1, 8)
   })
-  MeshRenderer.create(cube, {
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
+  GltfContainer.create(cube, {
+    src: 'src/assets/models/animated_cube.glb'
   })
-  VisibilityComponent.create(cube, { visible: false })
+  Animator.create(cube, {
+    states: [
+      {
+        clip: 'Static Pose',
+        playing: false,
+        shouldReset: true,
+        loop: true
+      },
+      {
+        clip: 'Action',
+        playing: true,
+        shouldReset: false,
+        loop: true
+      }
+    ]
+  })
+  yield* waitTicks(200)
+
+  const actionAnim = Animator.getClip(cube, 'Action')
+  actionAnim.playing = false
 
   const params: TakeAndCompareSnapshotRequest = {
-    id: 'visibility false',
+    id: 'animator 2',
     cameraPosition: Vector3.create(6.5, 4, 6.5),
     cameraTarget: Vector3.create(8, 2, 8),
     snapshotFrameSize: Vector3.create(512, 512),
@@ -87,9 +107,10 @@ test('visibility off: if exist a reference snapshot should match with it', funct
   const result: TakeAndCompareSnapshotResponse = (
     Testing as any
   ).takeAndCompareSnapshot(params)
+
   if (!result.wasExist) {
     Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
+      'This is the first time the tool is run. The test took the reference snapshots for futur e testing.'
     )
   }
 

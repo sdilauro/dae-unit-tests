@@ -16,14 +16,14 @@ test('gltfContainer: avocado model loads correctly', function* (context) {
     position: Vector3.create(8, 1, 8)
   })
   GltfContainer.create(avocado, {
-    src: 'src/models/avocado.glb'
+    src: 'src/assets/models/avocado.glb'
   })
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'gltfcontainer avocado',
     cameraPosition: Vector3.create(1, 1, 1),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.8
   }
 
@@ -47,14 +47,14 @@ test('gltfContainer: H.E.V Mark IV model loads correctly', function* (context) {
     scale: Vector3.create(0.03, 0.03, 0.03)
   })
   GltfContainer.create(hev, {
-    src: 'src/models/hevmarkiv.glb'
+    src: 'src/assets/models/hevmarkiv.glb'
   })
 
   const params: TakeAndCompareSnapshotRequest = {
     id: 'gltfcontainer hev',
     cameraPosition: Vector3.create(1, 1, 1),
     cameraTarget: Vector3.create(8, 1, 8),
-    snapshotFrameSize: Vector3.create(1024, 1024),
+    snapshotFrameSize: Vector3.create(512, 512),
     tolerance: 0.8
   }
 
