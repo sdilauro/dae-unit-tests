@@ -56,22 +56,21 @@ test('video-player: if exist a reference snapshot should match with it', functio
   })
 
   let timer: number = 0.5
-  let snapshot_id: number = 0
-  let succesful_counter: number = 0
-  let test_finished: boolean = false
-  let results: TakeAndCompareSnapshotResponse[] = []
+  let snapshotId: number = 0
+  let testFinished: boolean = false
+  const results: TakeAndCompareSnapshotResponse[] = []
 
   yield* waitTicks(1)
 
-  const snapshots_quantity: number = 4
+  const snapshotsQuantity: number = 4
 
-  function takeSnapshots(dt: number) {
+  function takeSnapshots(dt: number): void {
     timer -= dt
     if (timer <= 0) {
       timer = 1
-      snapshot_id += 1
+      snapshotId += 1
       const params: TakeAndCompareSnapshotRequest = {
-        id: `video player ${snapshot_id}`,
+        id: `video player ${snapshotId}`,
         cameraPosition: Vector3.create(8, 8, 8),
         cameraTarget: Vector3.create(8, 8, 16),
         snapshotFrameSize: Vector3.create(512, 512),
@@ -81,15 +80,9 @@ test('video-player: if exist a reference snapshot should match with it', functio
       const result: TakeAndCompareSnapshotResponse = (
         Testing as any
       ).takeAndCompareSnapshot(params)
-
-      if (result) {
-        results.push(result)
-      }
-
-      if (results.length == snapshots_quantity) {
-        engine.removeSystem(takeSnapshots)
-        test_finished = true
-        return
+      results.push(result)
+      if (results.length === snapshotsQuantity) {
+        testFinished = true
       }
     }
   }
@@ -97,7 +90,7 @@ test('video-player: if exist a reference snapshot should match with it', functio
   engine.addSystem(takeSnapshots)
 
   yield* waitTicksUntil(() => {
-    if (test_finished == true) {
+    if (testFinished) {
       return true
     } else {
       return false
@@ -107,11 +100,11 @@ test('video-player: if exist a reference snapshot should match with it', functio
   engine.removeSystem(takeSnapshots)
 
   for (const result of results) {
-    const snapshot_id: string = `video player  ${results.indexOf(result) + 1}`
+    const snapshotId: string = `video player  ${results.indexOf(result) + 1}`
     assertEquals(
       result.isMatch,
       true,
-      `Snapshot ${snapshot_id} wasn't exist or didn't match with reference`
+      `Snapshot ${snapshotId} wasn't exist or didn't match with reference`
     )
   }
 
