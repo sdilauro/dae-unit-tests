@@ -7,9 +7,17 @@ export type TestHelpers = {
    * This function resolves the next frame and fails if the CameraTransform is not
    * equal to the provided argument.
    */
-  setCameraTransform(
-    transform: Pick<TransformType, 'position' | 'rotation'>
-  ): Promise<void>
+  setCameraTransform(transform: Pick<TransformType, 'position' | 'rotation'>): Promise<void>
+
+  waitNTicks(n: number): Promise<void>
+
+  /**
+   *
+   * @param fn
+   * @param timeoutMs defaults to 10 seconds, max 10 minutes
+   * @returns resolve false if timeoutMs is reached before fn returns true
+   */
+  waitTicksUntil(fn: () => boolean, timeoutMs?: number): Promise<boolean>
 }
 
 export type TestFunctionContext = {
@@ -17,9 +25,7 @@ export type TestFunctionContext = {
   currentTestNumber: number
 }
 
-export type TestFunction = (
-  context: TestFunctionContext
-) => Generator | Promise<any>
+export type TestFunction = (context: TestFunctionContext) => Promise<any>
 
 export type TestDefinitionFunction = (name: string, fn: TestFunction) => void
 

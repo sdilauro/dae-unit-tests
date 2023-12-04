@@ -21,20 +21,9 @@ function getMethodRequest(
     case 'grey-diff':
       return { greyPixelDiff: {} }
     default:
-
-
-
-
-
-    
       throw new Error('method not reached')
   }
 }
-
-
-
-
-
 
 function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCompareScreenshotResponse): void {
   switch (method.method) {
@@ -55,6 +44,7 @@ function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCom
 
 export const DEFAULT_COMPARISON_METHOD: SnapshotComparisonMethod = { method: 'grey-diff', threshold: 0.9995 }
 export const DEFAULT_SCREENSHOT_SIZE: Vector2 = { x: 512, y: 512 }
+export const FAIL_IF_SNAPSHOT_NOT_FOUND = true
 
 /**
  *
@@ -68,7 +58,7 @@ export const DEFAULT_SCREENSHOT_SIZE: Vector2 = { x: 512, y: 512 }
  *  - by default it uses grey-diff method with threshold 0.9995
  */
 export async function assertSnapshot(
-  name: string,
+  srcStoredSnapshot: string,
   cameraPosition: Vector3,
   cameraTarget: Vector3,
   screenshotSize: Vector2 = DEFAULT_SCREENSHOT_SIZE,
@@ -79,11 +69,9 @@ export async function assertSnapshot(
     explorerAgent = info.agent
   }
 
-  const escapedName = name.replace(/[^a-zA-Z0-9]/g, '_').toLocaleLowerCase()
-  const srcStoredSnapshot = `screenshot/${explorerAgent}_snapshot_${escapedName}.png`
-
+  const finalSrcStoredSnapshot = srcStoredSnapshot.replace('$explorer', explorerAgent).toLocaleLowerCase()
   const result = await takeAndCompareScreenshot({
-    srcStoredSnapshot,
+    srcStoredSnapshot: finalSrcStoredSnapshot,
     cameraPosition,
     cameraTarget,
     screenshotSize,
@@ -91,9 +79,16 @@ export async function assertSnapshot(
   })
 
   if (!result.storedSnapshotFound) {
-    throw new Error(
-      `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the screenshot folder`
-    )
+    if (FAIL_IF_SNAPSHOT_NOT_FOUND) {
+      throw new Error(
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${srcStoredSnapshot}"`
+      )
+    } else {
+      console.log(
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${srcStoredSnapshot}"`
+      )
+      return
+    }
   }
 
   assertMethodResult(method, result)

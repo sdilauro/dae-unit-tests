@@ -1,17 +1,14 @@
+import { Transform, engine, type Entity, type TransformTypeWithOptionals } from '@dcl/sdk/ecs'
 import type { Vector3 } from '@dcl/sdk/math'
 import { movePlayerTo } from '~system/RestrictedActions'
 import { assert } from './../testing/assert'
-import {
-  engine,
-  type Entity,
-  Transform,
-  type TransformTypeWithOptionals
-} from '@dcl/sdk/ecs'
+import { type TestFunctionContext } from '../testing/types'
 
-export function* assertMovePlayerTo(
+export async function assertMovePlayerTo(
+  ctx: TestFunctionContext,
   newRelativePosition: Vector3,
   cameraTarget: Vector3
-): Generator<void> {
+): Promise<void> {
   let wasResolved: boolean = false
   movePlayerTo({
     newRelativePosition,
@@ -23,7 +20,8 @@ export function* assertMovePlayerTo(
     .catch((error) => {
       throw error
     })
-  yield
+  await ctx.helpers.waitNTicks(1)
+
   assert(wasResolved, 'Move player to was not resolved')
 }
 

@@ -1,10 +1,4 @@
-import {
-  CameraMode,
-  CameraModeArea,
-  EngineInfo,
-  Transform,
-  engine
-} from '@dcl/sdk/ecs'
+import { CameraMode, CameraModeArea, EngineInfo, Transform, engine } from '@dcl/sdk/ecs'
 import { Color4, Vector3 } from '@dcl/sdk/math'
 import { test } from './../../testing'
 import { assertComponentValue } from './../../testing/assert'
@@ -20,12 +14,12 @@ const areaColorFP: Color4 = Color4.create(1, 0, 0, 0.3)
 const floorColorTP: Color4 = Color4.Blue()
 const areaColorTP: Color4 = Color4.create(0, 0, 1, 0.3)
 
-test('camera-mode should be 0 (first-person) with camera area mode', function* (context) {
+test('camera-mode should be 0 (first-person) with camera area mode', async function (context) {
   // Comment the behavior below and uncomment this one to run the test manually
   // yield* waitTriggerTest(startTestEntity.get())
 
   // Workaround until waitTicksSceneIsReady works
-  yield* waitTicksUntil(() => {
+  await context.helpers.waitTicksUntil(() => {
     const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
     if (tickNumber > 100) {
       return true
@@ -41,22 +35,12 @@ test('camera-mode should be 0 (first-person) with camera area mode', function* (
   customAddEntity.clean()
 
   // Create a cameraModeArea with mode:0, centered on scene
-  createAreaMode(
-    sceneCenter,
-    0,
-    0,
-    'First Person',
-    'FirstPerson',
-    0,
-    floorColorFP,
-    areaColorFP,
-    Vector3.One()
-  )
+  createAreaMode(sceneCenter, 0, 0, 'First Person', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
 
   // Player is moved to inside of the cameraModeArea
-  yield* assertMovePlayerTo(sceneCenter, cameraTarget)
+  await assertMovePlayerTo(context, sceneCenter, cameraTarget)
 
-  yield* waitTicks(5)
+  await context.helpers.waitNTicks(5)
 
   assertComponentValue(engine.CameraEntity, CameraMode, {
     // Expect first person camera mode
@@ -71,17 +55,7 @@ test('camera-mode should be 0 (third-person) with camera area mode', function* (
   customAddEntity.clean()
 
   // Create a cameraModeArea with mode:1, centered on scene
-  createAreaMode(
-    sceneCenter,
-    0,
-    0,
-    'Third Person',
-    'ThirdPerson',
-    1,
-    floorColorTP,
-    areaColorTP,
-    Vector3.One()
-  )
+  createAreaMode(sceneCenter, 0, 0, 'Third Person', 'ThirdPerson', 1, floorColorTP, areaColorTP, Vector3.One())
 
   // Player is moved to inside of the cameraModeArea
   yield* assertMovePlayerTo(sceneCenter, cameraTarget)
@@ -144,17 +118,7 @@ test('transform.rotation should has effect in cameraModeArea.area', function* (c
   // Delete old entities
   customAddEntity.clean()
 
-  createAreaMode(
-    sceneCenter,
-    0,
-    90,
-    'Rotated Area',
-    'FirstPerson',
-    0,
-    floorColorFP,
-    areaColorFP,
-    Vector3.One()
-  )
+  createAreaMode(sceneCenter, 0, 90, 'Rotated Area', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
 
   // Player is moved to inside of the cameraModeArea (rotated 90° to the floor)
   yield* assertMovePlayerTo(Vector3.create(8, 0, 10), cameraTarget)
@@ -175,30 +139,10 @@ test('camera-mode should be 1(third-person) when mode of last one overlaped area
   yield* waitTicks(10)
 
   // Create area with mode: 0
-  createAreaMode(
-    sceneCenter,
-    0,
-    0,
-    'First Person',
-    'FirstPerson',
-    0,
-    floorColorFP,
-    areaColorFP,
-    Vector3.One()
-  )
+  createAreaMode(sceneCenter, 0, 0, 'First Person', 'FirstPerson', 0, floorColorFP, areaColorFP, Vector3.One())
   yield* waitTicks(10)
   // create area with mode: 1 overlaping the another area
-  createAreaMode(
-    sceneCenter,
-    90,
-    0,
-    'Third Person',
-    'ThirdPerson',
-    1,
-    floorColorTP,
-    areaColorTP,
-    Vector3.One()
-  )
+  createAreaMode(sceneCenter, 90, 0, 'Third Person', 'ThirdPerson', 1, floorColorTP, areaColorTP, Vector3.One())
 
   // Player is moved to origin
   yield* assertMovePlayerTo(Vector3.Zero(), cameraTarget)
