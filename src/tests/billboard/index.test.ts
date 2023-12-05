@@ -15,7 +15,6 @@ import { assertEquals } from '../../testing/assert'
 import { test } from './../../testing'
 import { customAddEntity } from './../../utils/entity'
 import { assertMovePlayerTo } from './../../utils/helpers'
-import { waitTicks } from './../../utils/waiters'
 
 // BM_NONE = 0,
 // BM_X = 1,
@@ -25,7 +24,7 @@ import { waitTicks } from './../../utils/waiters'
 
 const sceneCenter = Vector3.create(8, 1, 8)
 
-test('billboard: mode BM_NONE', function* (context) {
+test('billboard: mode BM_NONE', async function (context) {
   customAddEntity.clean()
   const cameraModeAreaE = engine.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
@@ -55,7 +54,7 @@ test('billboard: mode BM_NONE', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -68,7 +67,7 @@ test('billboard: mode BM_NONE', function* (context) {
     collisionMask: 5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -79,7 +78,7 @@ test('billboard: mode BM_NONE', function* (context) {
   )
 })
 
-test('billboard: mode BM_X', function* (context) {
+test('billboard: mode BM_X', async function (context) {
   customAddEntity.clean()
   const cameraModeAreaE = engine.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
@@ -109,7 +108,7 @@ test('billboard: mode BM_X', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -122,7 +121,7 @@ test('billboard: mode BM_X', function* (context) {
     collisionMask: 5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -133,7 +132,7 @@ test('billboard: mode BM_X', function* (context) {
   )
 })
 
-test('billboard: mode BM_Y', function* (context) {
+test('billboard: mode BM_Y', async function (context) {
   customAddEntity.clean()
   const cameraModeAreaE = engine.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
@@ -163,7 +162,7 @@ test('billboard: mode BM_Y', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -176,7 +175,7 @@ test('billboard: mode BM_Y', function* (context) {
     collisionMask: 5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -187,7 +186,7 @@ test('billboard: mode BM_Y', function* (context) {
   )
 })
 
-test('billboard: mode BM_Z', function* (context) {
+test('billboard: mode BM_Z', async function (context) {
   customAddEntity.clean()
   const cameraModeAreaE = engine.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
@@ -217,7 +216,7 @@ test('billboard: mode BM_Z', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -230,7 +229,7 @@ test('billboard: mode BM_Z', function* (context) {
     collisionMask: 5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -241,7 +240,7 @@ test('billboard: mode BM_Z', function* (context) {
   )
 })
 
-test('billboard: mode BM_ALL', function* (context) {
+test('billboard: mode BM_ALL', async function (context) {
   customAddEntity.clean()
   const cameraModeAreaE = engine.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
@@ -271,7 +270,7 @@ test('billboard: mode BM_ALL', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -284,7 +283,7 @@ test('billboard: mode BM_ALL', function* (context) {
     collisionMask: 5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 

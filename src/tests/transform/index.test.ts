@@ -11,13 +11,15 @@ import { getGlobalTransform } from '../../utils/transformed'
 import { test } from './../../testing'
 import { assert, assertEquals } from './../../testing/assert'
 import { customAddEntity } from './../../utils/entity'
+import { type TestFunctionContext } from '../../testing/types'
 
 let customWaitAndAssertTransformPositionTimestamp = 0
-function* waitAndAssertTransformPosition(
+async function waitAndAssertTransformPosition(
+  context: TestFunctionContext,
   entity: Entity,
   assertPrefix: string,
   doubleCheckPosition?: Vector3 // TODO: remove when getGlobalTransformPosition is ready
-): Generator<void> {
+): Promise<void> {
   customWaitAndAssertTransformPositionTimestamp += 1
   Raycast.createOrReplace(entity, {
     timestamp: customWaitAndAssertTransformPositionTimestamp,
@@ -32,8 +34,7 @@ function* waitAndAssertTransformPosition(
     collisionMask: 0xffffffff
   })
 
-  yield
-  yield // TODO: this should work without this, but foundation doesn't compute the raycast in the proper tick
+  await context.helpers.waitNTicks(2)
 
   assert(
     RaycastResult.getOrNull(entity) !== null,
@@ -57,7 +58,7 @@ function* waitAndAssertTransformPosition(
   }
 }
 
-test('should transform test-mechanism works well', function* (context) {
+test('should transform test-mechanism works well', async function (context) {
   assert(
     customAddEntity.isEmpty(),
     'custom add entity should be empty in the second test'
@@ -67,7 +68,8 @@ test('should transform test-mechanism works well', function* (context) {
   Transform.create(testEntityA, {
     position: Vector3.create(3.3, 4.4, 5.5)
   })
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityA,
     '(test entity A1)',
     Vector3.create(3.3, 4.4, 5.5)
@@ -77,7 +79,8 @@ test('should transform test-mechanism works well', function* (context) {
     Vector3.One(),
     Vector3.create(3.3, 4.4, 5.5)
   )
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityA,
     '(test entity A2)',
     Vector3.create(4.3, 5.4, 6.5)
@@ -89,7 +92,8 @@ test('should transform test-mechanism works well', function* (context) {
     position: Vector3.create(1.3, 1.4, 1.5),
     parent: testEntityA
   })
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityB,
     '(test entity B with A as parent)',
     Vector3.create(2.3, 2.4, 2.5)
@@ -105,14 +109,16 @@ test('should transform test-mechanism works well', function* (context) {
     position: Vector3.Forward(),
     parent: testEntityC
   })
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityD,
     '(test entity D with C rotated as parent)',
     Vector3.create(6, 5, 5)
   )
 
   engine.removeEntity(testEntityC)
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityD,
     '(test entity D removing its parent)',
     Vector3.create(0, 0, 1)
@@ -128,21 +134,23 @@ test('should transform test-mechanism works well', function* (context) {
     parent: testEntityC
   })
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityD,
     '(test entity D with C scaled as parent)',
     Vector3.create(5, 5, 7)
   )
 
   engine.removeEntity(testEntityC)
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityD,
     '(test entity D removing its parent)',
     Vector3.create(0, 0, 1)
   )
 })
 
-test(`should transform with a parent add parent's translation`, function* (context) {
+test(`should transform with a parent add parent's translation`, async function (context) {
   customAddEntity.clean()
   assert(
     customAddEntity.isEmpty(),
@@ -157,14 +165,15 @@ test(`should transform with a parent add parent's translation`, function* (conte
     position: Vector3.One(),
     parent: testEntityA
   })
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     testEntityB,
     '(test entity B ) ',
     Vector3.create(2, 2, 2)
   )
 })
 
-test(`should transform with a parent add parent's translation with scale/rotation`, function* (context) {
+test(`should transform with a parent add parent's translation with scale/rotation`, async function (context) {
   const [eA, eB, eC, eD, eE, eF] = Array.from({ length: 6 }, () =>
     customAddEntity.addEntity()
   )
@@ -183,7 +192,8 @@ test(`should transform with a parent add parent's translation with scale/rotatio
     parent: eB
   })
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     eC,
     '(test entity C) ',
     Vector3.create(2.5, 2.5, 2.5)
@@ -200,7 +210,8 @@ test(`should transform with a parent add parent's translation with scale/rotatio
     parent: eC
   })
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     eD,
     '(test entity D) ',
     Vector3.create(2.75, 2.5, 2.5)
@@ -212,7 +223,8 @@ test(`should transform with a parent add parent's translation with scale/rotatio
     parent: eD
   })
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     eE,
     '(test entity E) ',
     Vector3.create(3.0, 2.5, 2.5)
@@ -223,7 +235,8 @@ test(`should transform with a parent add parent's translation with scale/rotatio
     parent: eE
   })
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     eF,
     '(test entity F) ',
     Vector3.create(3.0, 2.5, 2.25)
@@ -231,7 +244,8 @@ test(`should transform with a parent add parent's translation with scale/rotatio
 
   engine.removeEntity(eE)
 
-  yield* waitAndAssertTransformPosition(
+  await waitAndAssertTransformPosition(
+    context,
     eF,
     '(test entity F) ',
     Vector3.create(0, 0, 1)

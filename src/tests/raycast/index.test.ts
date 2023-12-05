@@ -11,10 +11,9 @@ import { Quaternion, Vector3 } from '@dcl/sdk/math'
 import { assertComponentValue, assertEquals } from '../../testing/assert'
 import { test } from './../../testing'
 import { customAddEntity } from './../../utils/entity'
-import { waitTicks } from './../../utils/waiters'
 import { createChainedEntities } from './../../utils/helpers'
 
-test('raycast: raycast should hits only entities with collisionMask 1', function* (context) {
+test('raycast: raycast should hits only entities with collisionMask 1', async function (context) {
   customAddEntity.clean()
   const [eA, eB, eC] = Array.from({ length: 3 }, () =>
     customAddEntity.addEntity()
@@ -50,7 +49,7 @@ test('raycast: raycast should hits only entities with collisionMask 1', function
     continuous: false,
     collisionMask: 1
   })
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   let rayResult = RaycastResult.get(eA)
 
@@ -78,7 +77,7 @@ test('raycast: raycast should hits only entities with collisionMask 1', function
     continuous: false,
     collisionMask: 1
   })
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   rayResult = RaycastResult.get(eA)
   // console.log({ rayResult })
@@ -90,7 +89,7 @@ test('raycast: raycast should hits only entities with collisionMask 1', function
   )
 })
 
-test('raycast: raycast should hits only the first one entity with collisionMask 1', function* (context) {
+test('raycast: raycast should hits only the first one entity with collisionMask 1', async function (context) {
   customAddEntity.clean()
   const [eA, eB, eC] = Array.from({ length: 3 }, () =>
     customAddEntity.addEntity()
@@ -125,7 +124,7 @@ test('raycast: raycast should hits only the first one entity with collisionMask 
     continuous: false,
     collisionMask: 1
   })
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
   const rayResult = RaycastResult.get(eA)
 
   assertEquals(
@@ -135,7 +134,7 @@ test('raycast: raycast should hits only the first one entity with collisionMask 
   )
 })
 
-test('raycast: raycast should not hits any entity because has been rotated', function* (context) {
+test('raycast: raycast should not hits any entity because has been rotated', async function (context) {
   customAddEntity.clean()
   const [eA, eB, eC] = Array.from({ length: 3 }, () =>
     customAddEntity.addEntity()
@@ -173,7 +172,7 @@ test('raycast: raycast should not hits any entity because has been rotated', fun
     continuous: false,
     collisionMask: 1
   })
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(eA)
   assertEquals(
@@ -183,7 +182,7 @@ test('raycast: raycast should not hits any entity because has been rotated', fun
   )
 })
 
-test('raycast: rotated raycast should hits entities with any collisionMask', function* (context) {
+test('raycast: rotated raycast should hits entities with any collisionMask', async function (context) {
   customAddEntity.clean()
   const [eA, eB, eC] = Array.from({ length: 3 }, () =>
     customAddEntity.addEntity()
@@ -215,7 +214,7 @@ test('raycast: rotated raycast should hits entities with any collisionMask', fun
   //  until a new physic's tick comes. this '**yield *waitTicks(3)* *yield *waitTicks(3)' is relative at scene-tick rate
   //  in the godot case the scene has to wait as many ticks as physics tick fits in the scene-rate
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   Raycast.create(eA, {
     direction: {
@@ -227,7 +226,7 @@ test('raycast: rotated raycast should hits entities with any collisionMask', fun
     continuous: false,
     collisionMask: 0xffffffff
   })
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(eA)
   assertEquals(
@@ -237,7 +236,7 @@ test('raycast: rotated raycast should hits entities with any collisionMask', fun
   )
 })
 
-test('raycast: raycasting from an entity to global origin yields correct direction', function* (context) {
+test('raycast: raycasting from an entity to global origin yields correct direction', async function (context) {
   const globalTarget = Vector3.create(0, 10, 0)
   const globalOrigin = Vector3.One()
 
@@ -254,9 +253,9 @@ test('raycast: raycasting from an entity to global origin yields correct directi
     timestamp: 3
   })
   // 2. Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // 3. Validate that the RaycastResult component of the entity has the correct direction
   assertComponentValue(entity, RaycastResult, {
@@ -268,7 +267,7 @@ test('raycast: raycasting from an entity to global origin yields correct directi
   })
 })
 
-test('raycast: raycasting from an entity to local direction origin yields correct direction without transform ', function* (context) {
+test('raycast: raycasting from an entity to local direction origin yields correct direction without transform ', async function (context) {
   // create a new entity with a transform and a raycast component
   const globalOrigin = Vector3.create(0, 10, 0)
   const localDirection = Vector3.Down()
@@ -285,9 +284,9 @@ test('raycast: raycasting from an entity to local direction origin yields correc
     timestamp: 4
   })
 
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // check that the raycast result component was added to the entity
   assertComponentValue(entity, RaycastResult, {
@@ -299,7 +298,7 @@ test('raycast: raycasting from an entity to local direction origin yields correc
   })
 })
 
-test('raycast: raycasting from an entity to another entity works like globalTarget ', function* (context) {
+test('raycast: raycasting from an entity to another entity works like globalTarget ', async function (context) {
   // create a new entity with a transform and a raycast component
   const globalOrigin = Vector3.create(0, 10, 0)
   const targetEntityGlobalOrigin = Vector3.create(0, 10, 10)
@@ -319,9 +318,9 @@ test('raycast: raycasting from an entity to another entity works like globalTarg
     timestamp: 5
   })
   // Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // check that the raycast result component was added to the entity
   assertComponentValue(entity, RaycastResult, {
@@ -335,7 +334,7 @@ test('raycast: raycasting from an entity to another entity works like globalTarg
   })
 })
 
-test('raycast: raycasting from an entity to local direction origin yields correct direction with last entity rotated', function* (context) {
+test('raycast: raycasting from an entity to local direction origin yields correct direction with last entity rotated', async function (context) {
   // create a new entity with a transform and a raycast component
   const globalOrigin = Vector3.create(0, 10, 0)
   const globalDirection = Vector3.Down()
@@ -356,9 +355,9 @@ test('raycast: raycasting from an entity to local direction origin yields correc
   })
 
   // Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // check that the raycast result component was added to the entity
   assertComponentValue(entity, RaycastResult, {
@@ -370,7 +369,7 @@ test('raycast: raycasting from an entity to local direction origin yields correc
   })
 })
 
-test('raycast: raycasting from a translated origin works', function* (context) {
+test('raycast: raycasting from a translated origin works', async function (context) {
   // this is the paremeter of the globalTarget
   const globalTarget = Vector3.create(0, 10, 0)
 
@@ -389,9 +388,9 @@ test('raycast: raycasting from a translated origin works', function* (context) {
     timestamp: 3
   })
   // Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   const globalOrigin = Vector3.create(20, 0, 20)
 
@@ -405,7 +404,7 @@ test('raycast: raycasting from a translated origin works', function* (context) {
   })
 })
 
-test('raycast: localDirection raycasting from a translated origin works', function* (context) {
+test('raycast: localDirection raycasting from a translated origin works', async function (context) {
   // 1. Create an entity that is located in a transformed origin
   const entity = createChainedEntities([
     {
@@ -427,9 +426,9 @@ test('raycast: localDirection raycasting from a translated origin works', functi
     timestamp: 3
   })
   // Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // this is the global origin of the raycast, result of the translation and scaling of the entity
   const globalOrigin = Vector3.create(15, 0, 15)
@@ -445,7 +444,7 @@ test('raycast: localDirection raycasting from a translated origin works', functi
   })
 })
 
-test('raycast: localDirection raycasting from a translated origin works, with rotated parent', function* (context) {
+test('raycast: localDirection raycasting from a translated origin works, with rotated parent', async function (context) {
   // 1. Create an entity that is located in a transformed origin
   const entity = createChainedEntities([
     {
@@ -470,9 +469,9 @@ test('raycast: localDirection raycasting from a translated origin works, with ro
     timestamp: 3
   })
   // Wait for the next frame to let the RaycastSystem to process the raycast
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
 
   // this is the global origin of the raycast, result of the translation and scaling of the entity
   const globalOrigin = Vector3.create(15, 0, 15)
@@ -488,7 +487,7 @@ test('raycast: localDirection raycasting from a translated origin works, with ro
   })
 })
 
-test('raycast: localDirection raycasting from a translated origin works, with rotated parent and offsetOrigin', function* (context) {
+test('raycast: localDirection raycasting from a translated origin works, with rotated parent and offsetOrigin', async function (context) {
   // 1. Create an entity that is located in a transformed origin
   const entity = createChainedEntities([
     {
@@ -513,9 +512,9 @@ test('raycast: localDirection raycasting from a translated origin works, with ro
     queryType: RaycastQueryType.RQT_HIT_FIRST,
     timestamp: 3
   })
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? -1
-  yield* waitTicks(1)
+  await context.helpers.waitNTicks(1)
   // this is the global origin of the raycast, result of the translation and scaling of the entity
   const globalOrigin = Vector3.create(15, 0, 15)
   const rotatedForwardOrigin = Vector3.add(

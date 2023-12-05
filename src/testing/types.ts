@@ -7,7 +7,9 @@ export type TestHelpers = {
    * This function resolves the next frame and fails if the CameraTransform is not
    * equal to the provided argument.
    */
-  setCameraTransform(transform: Pick<TransformType, 'position' | 'rotation'>): Promise<void>
+  setCameraTransform(
+    transform: Pick<TransformType, 'position' | 'rotation'>
+  ): Promise<void>
 
   waitNTicks(n: number): Promise<void>
 

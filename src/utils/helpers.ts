@@ -1,4 +1,9 @@
-import { Transform, engine, type Entity, type TransformTypeWithOptionals } from '@dcl/sdk/ecs'
+import {
+  Transform,
+  engine,
+  type Entity,
+  type TransformTypeWithOptionals
+} from '@dcl/sdk/ecs'
 import type { Vector3 } from '@dcl/sdk/math'
 import { movePlayerTo } from '~system/RestrictedActions'
 import { assert } from './../testing/assert'

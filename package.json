@@ -10,10 +10,11 @@
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "format": "prettier --config .prettierrc -c src/**/*.{ts,tsx}",
-    "format:fix": "prettier -w --config .prettierrc -c src/**/*.{ts,tsx}"
+    "format:fix": "prettier -w --config .prettierrc -c src/**/*.{ts,tsx}",
+    "install-jsruntime": "npm i https://sdk-team-cdn.decentraland.org/@dcl/js-sdk-toolchain/branch/psquad/test-framework-tool/@dcl/js-runtime/dcl-js-runtime-7.3.30-7035425066.commit-a5b75cb.tgz"
   },
   "devDependencies": {
-    "@dcl/js-runtime": "https://sdk-team-cdn.decentraland.org/@dcl/js-sdk-toolchain/branch/psquad/test-framework-tool/@dcl/js-runtime/dcl-js-runtime-7.3.30-7035425066.commit-a5b75cb.tgz",
+    "@dcl/js-runtime": "7.3.30-7035425066.commit-a5b75cb",
     "@dcl/sdk": "https://sdk-team-cdn.decentraland.org/@dcl/js-sdk-toolchain/branch/psquad/test-framework-tool/dcl-sdk-7.3.30-7035425066.commit-a5b75cb.tgz",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",

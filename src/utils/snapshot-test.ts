@@ -25,11 +25,16 @@ function getMethodRequest(
   }
 }
 
-function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCompareScreenshotResponse): void {
+function assertMethodResult(
+  method: SnapshotComparisonMethod,
+  result: TakeAndCompareScreenshotResponse
+): void {
   switch (method.method) {
     case 'grey-diff':
       if (result.greyPixelDiff === undefined) {
-        throw new Error(`method grey-diff was specified but greyPixelDiff result is undefined`)
+        throw new Error(
+          `method grey-diff was specified but greyPixelDiff result is undefined`
+        )
       }
       if (result.greyPixelDiff.similarity < method.threshold) {
         throw new Error(
@@ -42,7 +47,10 @@ function assertMethodResult(method: SnapshotComparisonMethod, result: TakeAndCom
   }
 }
 
-export const DEFAULT_COMPARISON_METHOD: SnapshotComparisonMethod = { method: 'grey-diff', threshold: 0.9995 }
+export const DEFAULT_COMPARISON_METHOD: SnapshotComparisonMethod = {
+  method: 'grey-diff',
+  threshold: 0.9995
+}
 export const DEFAULT_SCREENSHOT_SIZE: Vector2 = { x: 512, y: 512 }
 export const FAIL_IF_SNAPSHOT_NOT_FOUND = true
 
@@ -69,7 +77,9 @@ export async function assertSnapshot(
     explorerAgent = info.agent
   }
 
-  const finalSrcStoredSnapshot = srcStoredSnapshot.replace('$explorer', explorerAgent).toLocaleLowerCase()
+  const finalSrcStoredSnapshot = srcStoredSnapshot
+    .replace('$explorer', explorerAgent)
+    .toLocaleLowerCase()
   const result = await takeAndCompareScreenshot({
     srcStoredSnapshot: finalSrcStoredSnapshot,
     cameraPosition,
@@ -81,11 +91,11 @@ export async function assertSnapshot(
   if (!result.storedSnapshotFound) {
     if (FAIL_IF_SNAPSHOT_NOT_FOUND) {
       throw new Error(
-        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${srcStoredSnapshot}"`
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${finalSrcStoredSnapshot}"`
       )
     } else {
       console.log(
-        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${srcStoredSnapshot}"`
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${finalSrcStoredSnapshot}"`
       )
       return
     }
