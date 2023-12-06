@@ -1,20 +1,15 @@
-import { EngineInfo, MeshRenderer, Transform, engine } from '@dcl/sdk/ecs'
+import { MeshRenderer, Transform } from '@dcl/sdk/ecs'
 import { Vector3 } from '@dcl/sdk/math'
 import { customAddEntity } from '../../utils/entity'
 import { assertSnapshot } from '../../utils/snapshot-test'
 import { test } from './../../testing'
 
-test('mesh-renderer box: if exist a reference snapshot should match with it', async function (context) {
-  await context.helpers.waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 20) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('mesh-renderer clean previous tests', async function (context) {
   customAddEntity.clean()
+  await context.helpers.waitNTicks(100)
+})
 
+test('mesh-renderer box: if exist a reference snapshot should match with it', async function (context) {
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
     position: Vector3.create(8, 2, 8),

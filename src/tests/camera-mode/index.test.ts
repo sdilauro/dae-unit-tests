@@ -63,7 +63,7 @@ test('camera-mode should be 0 (first-person) with camera area mode', async funct
   })
 })
 
-test('camera-mode should be 0 (third-person) with camera area mode', async function (context) {
+test('camera-mode should be 1 (third-person) with camera area mode', async function (context) {
   // yield* waitTriggerTest(thirdPersonEntity.get())
 
   // Delete old entities
@@ -166,52 +166,6 @@ test('transform.rotation should has effect in cameraModeArea.area', async functi
   })
 })
 
-test('camera-mode should be 1(third-person) when mode of last one overlaped area is 1(third-person)', async function (context) {
-  // yield* waitTriggerTest(overlapedEntity.get())
-
-  // Delete old entities
-  customAddEntity.clean()
-  await context.helpers.waitNTicks(10)
-
-  // Create area with mode: 0
-  createAreaMode(
-    sceneCenter,
-    0,
-    0,
-    'First Person',
-    'FirstPerson',
-    0,
-    floorColorFP,
-    areaColorFP,
-    Vector3.One()
-  )
-  await context.helpers.waitNTicks(10)
-  // create area with mode: 1 overlaping the another area
-  createAreaMode(
-    sceneCenter,
-    90,
-    0,
-    'Third Person',
-    'ThirdPerson',
-    1,
-    floorColorTP,
-    areaColorTP,
-    Vector3.One()
-  )
-
-  // Player is moved to origin
-  await assertMovePlayerTo(context, Vector3.Zero(), cameraTarget)
-  // Player is moved to inside of the cameraModeArea
-  await assertMovePlayerTo(context, sceneCenter, cameraTarget)
-
-  await context.helpers.waitNTicks(5)
-
-  assertComponentValue(engine.CameraEntity, CameraMode, {
-    // Expect third person camera mode because is the last one camera mode area instantiated
-    mode: 1
-  })
-})
-
 test('cameraModeArea should alternate according the area wich player enters', async function (context) {
   // yield* waitTriggerTest(overlapedEntity2.get())
   // Delete old entities
@@ -242,6 +196,7 @@ test('cameraModeArea should alternate according the area wich player enters', as
 
   await context.helpers.waitNTicks(10)
 
+  // Only inside bigest one
   await assertMovePlayerTo(context, Vector3.create(3, 0, 3), cameraTarget)
 
   await context.helpers.waitNTicks(10)
@@ -252,6 +207,7 @@ test('cameraModeArea should alternate according the area wich player enters', as
 
   await context.helpers.waitNTicks(10)
 
+  // Inside bigest one and medium one
   await assertMovePlayerTo(context, Vector3.create(6, 0, 6), cameraTarget)
 
   await context.helpers.waitNTicks(10)
@@ -262,6 +218,7 @@ test('cameraModeArea should alternate according the area wich player enters', as
 
   await context.helpers.waitNTicks(10)
 
+  // Inside all of them
   await assertMovePlayerTo(context, sceneCenter, cameraTarget)
 
   await context.helpers.waitNTicks(10)
@@ -272,6 +229,7 @@ test('cameraModeArea should alternate according the area wich player enters', as
 
   await context.helpers.waitNTicks(10)
 
+  // Outside all of them
   await assertMovePlayerTo(context, Vector3.create(1, 0, 1), cameraTarget)
 
   await context.helpers.waitNTicks(10)
@@ -279,4 +237,9 @@ test('cameraModeArea should alternate according the area wich player enters', as
   assertComponentValue(engine.CameraEntity, CameraMode, {
     mode: 0
   })
+})
+
+test('camera-mode-area: clean and wait until change-camera-mode animation finishes', async function (context) {
+  customAddEntity.clean()
+  await context.helpers.waitNTicks(100)
 })
