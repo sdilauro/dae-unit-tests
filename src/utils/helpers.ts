@@ -8,6 +8,7 @@ import type { Vector3 } from '@dcl/sdk/math'
 import { movePlayerTo } from '~system/RestrictedActions'
 import { assert } from './../testing/assert'
 import { type TestFunctionContext } from '../testing/types'
+import { customAddEntity } from './entity'
 
 export async function assertMovePlayerTo(
   ctx: TestFunctionContext,
@@ -35,7 +36,7 @@ export function createChainedEntities(
   parent: Entity = engine.RootEntity
 ): Entity {
   return transforms.reduce((parent, transform) => {
-    const entity = engine.addEntity()
+    const entity = customAddEntity.addEntity()
     Transform.create(entity, { ...transform, parent })
     return entity
   }, parent)
