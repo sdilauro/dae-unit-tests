@@ -63,7 +63,7 @@ export function createTestRuntime(
       typeof value === 'object' &&
       typeof value.then === 'function'
     ) {
-      // console.log('⏱️ yield promise')
+      console.log('⏱️ yield promise')
       // if the value is a promise, schedule it to be awaited after the current frame is finished
       nextTickFuture.push(async () => {
         try {
@@ -73,14 +73,14 @@ export function createTestRuntime(
         }
       })
     } else if (typeof value === 'function') {
-      // console.log('⏱️ yield function')
+      console.log('⏱️ yield function')
       // if the value is a function, schedule it to be called on the next frame
       nextTickFuture.push(() => {
         scheduleValue(value(), env)
       })
       return
     } else if (typeof value === 'undefined' || value === null) {
-      // console.log('⏱️ yield')
+      console.log('⏱️ yield')
       // if the value is undefined or null, continue processing the generator the next frame
       nextTickFuture.push(() => {
         consumeGenerator(env)
@@ -158,6 +158,26 @@ export function createTestRuntime(
         console.log(`🧪 Running test ${entry.name}`)
 
         const testHelpers: TestHelpers = {
+          async waitTicksUntil(
+            fn: () => boolean,
+            timeoutMs: number = 10000
+          ): Promise<boolean> {
+            if (timeoutMs < 0) throw new Error(`Timeout must be positive`)
+            if (timeoutMs > 10 * 60000)
+              throw new Error(`Timeout must be less than 10 minutes`)
+            const start = new Date().getTime()
+            while (!fn()) {
+              if (new Date().getTime() - start > timeoutMs) {
+                return false
+              }
+
+              await nextTick()
+            }
+            return true
+          },
+          async waitNTicks(n: number) {
+            for (let i = 0; i < n; i++) await nextTick()
+          },
           async setCameraTransform(transform) {
             await testingModule.setCameraTransform(transform)
             await nextTick()

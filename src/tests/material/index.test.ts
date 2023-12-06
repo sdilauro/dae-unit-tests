@@ -1,32 +1,15 @@
 import {
-  EngineInfo,
   Material,
   MaterialTransparencyMode,
   MeshRenderer,
-  Transform,
-  engine
+  Transform
 } from '@dcl/sdk/ecs'
 import { Color4, Vector3 } from '@dcl/sdk/math'
-import * as Testing from '~system/Testing'
-import { assertEquals } from '../../testing/assert'
 import { customAddEntity } from '../../utils/entity'
-import type {
-  TakeAndCompareSnapshotRequest,
-  TakeAndCompareSnapshotResponse
-} from '../../utils/snapshot-test'
-import { waitTicks, waitTicksUntil } from '../../utils/waiters'
+import { assertSnapshot } from '../../utils/snapshot-test'
 import { test } from './../../testing'
 
-test('material blue emissiveIntensity:100: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
-
+test('material blue emissiveIntensity:100: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -44,37 +27,16 @@ test('material blue emissiveIntensity:100: if exist a reference snapshot should 
     emissiveColor: Color4.Blue(),
     emissiveIntensity: 100
   })
-  yield* waitTicks(5)
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 1',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
+  await context.helpers.waitNTicks(5)
 
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_01.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with alpha: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test(' material blue with alpha: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -94,38 +56,16 @@ test('material blue with alpha: if exist a reference snapshot should match with 
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 2',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_02.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with texture: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material blue with texture: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -151,38 +91,16 @@ test('material blue with texture: if exist a reference snapshot should match wit
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 3',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first  time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_03.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with metallic:0 roghness:1 alphaTest:1: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material blue with metallic:0 roghness:1 alphaTest:1: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -202,38 +120,16 @@ test('material blue with metallic:0 roghness:1 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 4',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_04.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with metallic:0.5 roghness:0.5 alphaTest:1: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material blue with metallic:0.5 roghness:0.5 alphaTest:1: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -253,38 +149,16 @@ test('material blue with metallic:0.5 roghness:0.5 alphaTest:1: if exist a refer
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 5',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_05.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with metallic:0 roghness:0 alphaTest:1: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material blue with metallic:0 roghness:0 alphaTest:1: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -304,38 +178,16 @@ test('material blue with metallic:0 roghness:0 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 6',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_06.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material blue with metallic:1 roghness:0 alphaTest:1: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material blue with metallic:1 roghness:0 alphaTest:1: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -355,38 +207,16 @@ test('material blue with metallic:1 roghness:0 alphaTest:1: if exist a reference
     albedoColor: Color4.Blue()
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 7',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_07.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material uv checker: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material uv checker: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -409,38 +239,16 @@ test('material uv checker: if exist a reference snapshot should match with it', 
     }
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 8',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_08.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material uv checker with transparency mode auto: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material uv checker with transparency mode auto: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -470,38 +278,16 @@ test('material uv checker with transparency mode auto: if exist a reference snap
     transparencyMode: MaterialTransparencyMode.MTM_AUTO
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 9',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_09.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material uv checker with transparency mode blend: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material uv checker with transparency mode blend: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -532,38 +318,16 @@ test('material uv checker with transparency mode blend: if exist a reference sna
     castShadows: false
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 10',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_10.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material transparency mode auto with emissive: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material transparency mode auto with emissive: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -595,38 +359,16 @@ test('material transparency mode auto with emissive: if exist a reference snapsh
     emissiveIntensity: 150
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 11',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_11.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material rock wall texture: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material rock wall texture: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -649,38 +391,16 @@ test('material rock wall texture: if exist a reference snapshot should match wit
     }
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 12',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The test took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_12.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })
 
-test('material rock wall texture with bump texture: if exist a reference snapshot should match with it', function* (context) {
-  yield* waitTicksUntil(() => {
-    const tickNumber = EngineInfo.getOrNull(engine.RootEntity)?.tickNumber ?? 0
-    if (tickNumber > 100) {
-      return true
-    } else {
-      return false
-    }
-  })
+test('material rock wall texture with bump texture: if exist a reference snapshot should match with it', async function (context) {
   customAddEntity.clean()
   const cube = customAddEntity.addEntity()
   Transform.create(cube, {
@@ -709,25 +429,11 @@ test('material rock wall texture with bump texture: if exist a reference snapsho
     }
   })
 
-  yield* waitTicks(2)
+  await context.helpers.waitNTicks(2)
 
-  const params: TakeAndCompareSnapshotRequest = {
-    id: 'material 13',
-    cameraPosition: Vector3.create(6.5, 4, 6.5),
-    cameraTarget: Vector3.create(8, 2, 8),
-    snapshotFrameSize: Vector3.create(512, 512),
-    tolerance: 0.99
-  }
-
-  const result: TakeAndCompareSnapshotResponse = (
-    Testing as any
-  ).takeAndCompareSnapshot(params)
-
-  if (!result.wasExist) {
-    Error(
-      'This is the first time the tool is run. The t est took the reference snapshots for future testing.'
-    )
-  }
-
-  assertEquals(result.isMatch, true, `snapshot doesn't match with reference`)
+  await assertSnapshot(
+    'screenshot/$explorer_snapshot_material_13.png',
+    Vector3.create(6, 4, 6),
+    Vector3.create(8, 1, 8)
+  )
 })

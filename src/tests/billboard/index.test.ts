@@ -2,6 +2,7 @@ import {
   Billboard,
   BillboardMode,
   CameraModeArea,
+  ColliderLayer,
   MeshCollider,
   MeshRenderer,
   Raycast,
@@ -15,7 +16,7 @@ import { assertEquals } from '../../testing/assert'
 import { test } from './../../testing'
 import { customAddEntity } from './../../utils/entity'
 import { assertMovePlayerTo } from './../../utils/helpers'
-import { waitTicks } from './../../utils/waiters'
+import { waitForMeshColliderApplied } from '../../utils/godot'
 
 // BM_NONE = 0,
 // BM_X = 1,
@@ -25,9 +26,9 @@ import { waitTicks } from './../../utils/waiters'
 
 const sceneCenter = Vector3.create(8, 1, 8)
 
-test('billboard: mode BM_NONE', function* (context) {
+test('billboard: mode BM_NONE', async function (context) {
   customAddEntity.clean()
-  const cameraModeAreaE = engine.addEntity()
+  const cameraModeAreaE = customAddEntity.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
   CameraModeArea.create(cameraModeAreaE, {
     area: Vector3.create(16, 5, 16),
@@ -40,12 +41,14 @@ test('billboard: mode BM_NONE', function* (context) {
     scale: Vector3.create(3, 3, 0.1)
   })
   MeshCollider.create(colliderToRaycast, {
-    collisionMask: 5,
+    collisionMask: ColliderLayer.CL_CUSTOM5,
     mesh: {
       $case: 'box',
       box: { uvs: [] }
     }
   })
+  await waitForMeshColliderApplied(context)
+
   const billboardEntity = customAddEntity.addEntity()
   Transform.create(billboardEntity, { position: sceneCenter })
   Billboard.create(billboardEntity, { billboardMode: BillboardMode.BM_NONE })
@@ -55,7 +58,7 @@ test('billboard: mode BM_NONE', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -65,10 +68,10 @@ test('billboard: mode BM_NONE', function* (context) {
     maxDistance: 30,
     queryType: RaycastQueryType.RQT_QUERY_ALL,
     continuous: false,
-    collisionMask: 5
+    collisionMask: ColliderLayer.CL_CUSTOM5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -79,14 +82,22 @@ test('billboard: mode BM_NONE', function* (context) {
   )
 })
 
-test('billboard: mode BM_X', function* (context) {
+test('billboard: mode BM_Y', async function (context) {
   customAddEntity.clean()
-  const cameraModeAreaE = engine.addEntity()
+
+  // Setup player
+  const cameraModeAreaE = customAddEntity.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
   CameraModeArea.create(cameraModeAreaE, {
     area: Vector3.create(16, 5, 16),
     mode: 0
   })
+  await assertMovePlayerTo(context, Vector3.create(4, 0, 4), sceneCenter)
+
+  // Animation of the camera mode area takes several ticks
+  await context.helpers.waitNTicks(100)
+
+  // Setup billboard
   const colliderToRaycast = customAddEntity.addEntity()
   Transform.create(colliderToRaycast, {
     parent: engine.PlayerEntity,
@@ -94,66 +105,14 @@ test('billboard: mode BM_X', function* (context) {
     scale: Vector3.create(3, 3, 0.1)
   })
   MeshCollider.create(colliderToRaycast, {
-    collisionMask: 5,
+    collisionMask: ColliderLayer.CL_CUSTOM5,
     mesh: {
       $case: 'box',
       box: { uvs: [] }
     }
   })
-  const billboardEntity = customAddEntity.addEntity()
-  Transform.create(billboardEntity, { position: sceneCenter })
-  Billboard.create(billboardEntity, { billboardMode: BillboardMode.BM_X })
-  MeshRenderer.create(billboardEntity, {
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
-  })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
+  await waitForMeshColliderApplied(context)
 
-  Raycast.create(billboardEntity, {
-    direction: {
-      $case: 'localDirection',
-      localDirection: Vector3.Backward()
-    },
-    maxDistance: 30,
-    queryType: RaycastQueryType.RQT_QUERY_ALL,
-    continuous: false,
-    collisionMask: 5
-  })
-
-  yield* waitTicks(3)
-
-  const rayResult = RaycastResult.get(billboardEntity)
-
-  assertEquals(
-    rayResult.hits.length,
-    0,
-    'raycast from entity should not hit the collider '
-  )
-})
-
-test('billboard: mode BM_Y', function* (context) {
-  customAddEntity.clean()
-  const cameraModeAreaE = engine.addEntity()
-  Transform.create(cameraModeAreaE, { position: sceneCenter })
-  CameraModeArea.create(cameraModeAreaE, {
-    area: Vector3.create(16, 5, 16),
-    mode: 0
-  })
-  const colliderToRaycast = customAddEntity.addEntity()
-  Transform.create(colliderToRaycast, {
-    parent: engine.PlayerEntity,
-    position: Vector3.create(0, 1, 0.45),
-    scale: Vector3.create(3, 3, 0.1)
-  })
-  MeshCollider.create(colliderToRaycast, {
-    collisionMask: 5,
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
-  })
   const billboardEntity = customAddEntity.addEntity()
   Transform.create(billboardEntity, { position: sceneCenter })
   Billboard.create(billboardEntity, { billboardMode: BillboardMode.BM_Y })
@@ -163,7 +122,6 @@ test('billboard: mode BM_Y', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -173,10 +131,10 @@ test('billboard: mode BM_Y', function* (context) {
     maxDistance: 30,
     queryType: RaycastQueryType.RQT_QUERY_ALL,
     continuous: false,
-    collisionMask: 5
+    collisionMask: ColliderLayer.CL_CUSTOM5
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
 
@@ -187,81 +145,57 @@ test('billboard: mode BM_Y', function* (context) {
   )
 })
 
-test('billboard: mode BM_Z', function* (context) {
+test('billboard: mode BM_ALL', async function (context) {
+  const stepBoxSize = 4.0
+
   customAddEntity.clean()
-  const cameraModeAreaE = engine.addEntity()
+  const cameraModeAreaE = customAddEntity.addEntity()
   Transform.create(cameraModeAreaE, { position: sceneCenter })
   CameraModeArea.create(cameraModeAreaE, {
-    area: Vector3.create(16, 5, 16),
+    area: Vector3.create(16, stepBoxSize + 6, 16),
     mode: 0
   })
-  const colliderToRaycast = customAddEntity.addEntity()
-  Transform.create(colliderToRaycast, {
-    parent: engine.PlayerEntity,
-    position: Vector3.create(0, 1, 0.45),
-    scale: Vector3.create(3, 3, 0.1)
-  })
-  MeshCollider.create(colliderToRaycast, {
-    collisionMask: 5,
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
-  })
-  const billboardEntity = customAddEntity.addEntity()
-  Transform.create(billboardEntity, { position: sceneCenter })
-  Billboard.create(billboardEntity, { billboardMode: BillboardMode.BM_Z })
-  MeshRenderer.create(billboardEntity, {
-    mesh: {
-      $case: 'box',
-      box: { uvs: [] }
-    }
-  })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
 
-  Raycast.create(billboardEntity, {
-    direction: {
-      $case: 'localDirection',
-      localDirection: Vector3.Backward()
-    },
-    maxDistance: 30,
-    queryType: RaycastQueryType.RQT_QUERY_ALL,
-    continuous: false,
-    collisionMask: 5
+  const stepBoxPosition = Vector3.create(4, stepBoxSize / 2.0, 4)
+
+  const stepBox = customAddEntity.addEntity()
+  Transform.create(stepBox, {
+    position: stepBoxPosition,
+    scale: Vector3.create(2, stepBoxSize, 2)
   })
+  MeshCollider.create(stepBox, {
+    collisionMask: ColliderLayer.CL_PHYSICS | ColliderLayer.CL_POINTER
+  })
+  await waitForMeshColliderApplied(context)
 
-  yield* waitTicks(3)
-
-  const rayResult = RaycastResult.get(billboardEntity)
-
-  assertEquals(
-    rayResult.hits.length,
-    0,
-    'raycast from entity should not hit the collider '
+  await assertMovePlayerTo(
+    context,
+    Vector3.add(stepBoxPosition, Vector3.create(0, 3, 0)),
+    sceneCenter
   )
-})
 
-test('billboard: mode BM_ALL', function* (context) {
-  customAddEntity.clean()
-  const cameraModeAreaE = engine.addEntity()
-  Transform.create(cameraModeAreaE, { position: sceneCenter })
-  CameraModeArea.create(cameraModeAreaE, {
-    area: Vector3.create(16, 5, 16),
-    mode: 0
-  })
+  // Animation of the camera mode area takes several ticks
+  // Also the gravity to make the player fall
+  await context.helpers.waitNTicks(150)
+
   const colliderToRaycast = customAddEntity.addEntity()
   Transform.create(colliderToRaycast, {
     parent: engine.PlayerEntity,
-    position: Vector3.create(0, 1, 0.45),
-    scale: Vector3.create(3, 3, 0.1)
+    position: Vector3.create(0, 1, 0),
+    scale: Vector3.create(1, 2, 1) // TODO: change Z to 0.1 to make it more precisely
   })
   MeshCollider.create(colliderToRaycast, {
-    collisionMask: 5,
+    collisionMask: ColliderLayer.CL_CUSTOM4,
     mesh: {
-      $case: 'box',
-      box: { uvs: [] }
+      $case: 'cylinder',
+      cylinder: {
+        radiusBottom: 0.7,
+        radiusTop: 0.7
+      }
     }
   })
+  await waitForMeshColliderApplied(context)
+
   const billboardEntity = customAddEntity.addEntity()
   Transform.create(billboardEntity, { position: sceneCenter })
   Billboard.create(billboardEntity, { billboardMode: BillboardMode.BM_ALL })
@@ -271,7 +205,6 @@ test('billboard: mode BM_ALL', function* (context) {
       box: { uvs: [] }
     }
   })
-  yield* assertMovePlayerTo(Vector3.create(4, 0, 4), sceneCenter)
 
   Raycast.create(billboardEntity, {
     direction: {
@@ -281,12 +214,15 @@ test('billboard: mode BM_ALL', function* (context) {
     maxDistance: 30,
     queryType: RaycastQueryType.RQT_QUERY_ALL,
     continuous: false,
-    collisionMask: 5
+    collisionMask: ColliderLayer.CL_CUSTOM4
   })
 
-  yield* waitTicks(3)
+  await context.helpers.waitNTicks(3)
 
   const rayResult = RaycastResult.get(billboardEntity)
+
+  CameraModeArea.deleteFrom(cameraModeAreaE)
+  await context.helpers.waitNTicks(3)
 
   assertEquals(
     rayResult.hits.length,

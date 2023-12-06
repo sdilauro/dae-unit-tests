@@ -1,37 +1,105 @@
-import { Vector3 } from '@dcl/sdk/math'
+import { type Vector3 } from '@dcl/sdk/math'
+import { getExplorerInformation } from '~system/Runtime'
+import {
+  takeAndCompareScreenshot,
+  type Vector2,
+  type TakeAndCompareScreenshotRequest_ComparisonMethodGreyPixelDiff,
+  type TakeAndCompareScreenshotResponse
+} from '~system/Testing'
 
-export type TakeAndCompareSnapshotRequest = {
-  // unique id, the path is getting as `user://snapshot_${id.replace(" ", "_")}.png`
-  id: string
-  // relative to base scene
-  cameraPosition: Vector3
-  // relative to base scene
-  cameraTarget: Vector3
-  // width x height snapshot size
-  snapshotFrameSize: { x: number; y: number }
-  // similarity comparison, from 0 to 1
-  tolerance: number
+let explorerAgent = 'unknown'
+
+type SnapshotComparisonMethod = {
+  method: 'grey-diff'
+  threshold: number
 }
 
-export type TakeAndCompareSnapshotResponse = {
-  // true if the threshold was met, false otherwise or if it wasn't previously exist
-  isMatch: boolean
-  // from 0 to 1 how similar the snapshot taken is to the previous one
-  similarity: number
-  // true if the snapshot already exists in the snapshot folder, false otherwise
-  wasExist: boolean
-  // true if the snapshot was created and saved, false otherwise
-  replaced: boolean
+function getMethodRequest(
+  method: SnapshotComparisonMethod
+): TakeAndCompareScreenshotRequest_ComparisonMethodGreyPixelDiff {
+  switch (method.method) {
+    case 'grey-diff':
+      return { greyPixelDiff: {} }
+    default:
+      throw new Error('method not reached')
+  }
 }
 
-export const defaultParams: TakeAndCompareSnapshotRequest = {
-  id: 'test-snapshot',
-  cameraPosition: Vector3.create(1, 1, 1),
-  cameraTarget: Vector3.create(1, 1, 2),
-  snapshotFrameSize: Vector3.create(1024, 1024),
-  tolerance: 0.8
+function assertMethodResult(
+  method: SnapshotComparisonMethod,
+  result: TakeAndCompareScreenshotResponse
+): void {
+  switch (method.method) {
+    case 'grey-diff':
+      if (result.greyPixelDiff === undefined) {
+        throw new Error(
+          `method grey-diff was specified but greyPixelDiff result is undefined`
+        )
+      }
+      if (result.greyPixelDiff.similarity < method.threshold) {
+        throw new Error(
+          `method grey-diff was specified and greyPixelDiff similarity (${result.greyPixelDiff.similarity}) is lower than threshold ${method.threshold}`
+        )
+      }
+      break
+    default:
+      throw new Error('method not reached')
+  }
 }
 
-// way to use:
-// import * as Testing from '~system/Testing'
-// const result: TakeAndCompareSnapshotResponse = (Testing as any).takeAndCompareSnapshot(defaultParams)
+export const DEFAULT_COMPARISON_METHOD: SnapshotComparisonMethod = {
+  method: 'grey-diff',
+  threshold: 0.9995
+}
+export const DEFAULT_SCREENSHOT_SIZE: Vector2 = { x: 512, y: 512 }
+export const FAIL_IF_SNAPSHOT_NOT_FOUND = true
+
+/**
+ *
+ * @param name it resolves the source path as lowercase without spaces
+ * @param cameraPosition
+ * @param cameraTarget
+ *
+ * e.g.
+ *  - godot explorer and assertSnapshot('Mesh Renderer with box set, scale 1,1,1', Vector3.create(1, 1, 1), Vector3.create(1, 1, 2))
+ *  - the path `${sceneFolderCwd}/screenshot/godot_snapshot_mesh_renderer_with_box_set_scale_1_1_1.png` will be used
+ *  - by default it uses grey-diff method with threshold 0.9995
+ */
+export async function assertSnapshot(
+  srcStoredSnapshot: string,
+  cameraPosition: Vector3,
+  cameraTarget: Vector3,
+  screenshotSize: Vector2 = DEFAULT_SCREENSHOT_SIZE,
+  method: SnapshotComparisonMethod = DEFAULT_COMPARISON_METHOD
+): Promise<void> {
+  if (explorerAgent === 'unknown') {
+    const info = await getExplorerInformation({})
+    explorerAgent = info.agent
+  }
+
+  const finalSrcStoredSnapshot = srcStoredSnapshot
+    .replace('$explorer', explorerAgent)
+    .toLocaleLowerCase()
+  const result = await takeAndCompareScreenshot({
+    srcStoredSnapshot: finalSrcStoredSnapshot,
+    cameraPosition,
+    cameraTarget,
+    screenshotSize,
+    ...getMethodRequest(method)
+  })
+
+  if (!result.storedSnapshotFound) {
+    if (FAIL_IF_SNAPSHOT_NOT_FOUND) {
+      throw new Error(
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${finalSrcStoredSnapshot}"`
+      )
+    } else {
+      console.log(
+        `Snapshot not found, please copy the snapshot from the explorer-screenshot folder to the path "${finalSrcStoredSnapshot}"`
+      )
+      return
+    }
+  }
+
+  assertMethodResult(method, result)
+}

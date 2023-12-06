@@ -1,30 +1,24 @@
-import type { Vector3 } from '@dcl/sdk/math'
-import { movePlayerTo } from '~system/RestrictedActions'
-import { assert } from './../testing/assert'
 import {
+  Transform,
   engine,
   type Entity,
-  Transform,
   type TransformTypeWithOptionals
 } from '@dcl/sdk/ecs'
+import type { Vector3 } from '@dcl/sdk/math'
+import { movePlayerTo } from '~system/RestrictedActions'
+import { type TestFunctionContext } from '../testing/types'
+import { customAddEntity } from './entity'
 
-export function* assertMovePlayerTo(
+export async function assertMovePlayerTo(
+  ctx: TestFunctionContext,
   newRelativePosition: Vector3,
   cameraTarget: Vector3
-): Generator<void> {
-  let wasResolved: boolean = false
-  movePlayerTo({
+): Promise<void> {
+  await movePlayerTo({
     newRelativePosition,
     cameraTarget
   })
-    .then(() => {
-      wasResolved = true
-    })
-    .catch((error) => {
-      throw error
-    })
-  yield
-  assert(wasResolved, 'Move player to was not resolved')
+  await ctx.helpers.waitNTicks(1)
 }
 
 export function createChainedEntities(
@@ -32,7 +26,7 @@ export function createChainedEntities(
   parent: Entity = engine.RootEntity
 ): Entity {
   return transforms.reduce((parent, transform) => {
-    const entity = engine.addEntity()
+    const entity = customAddEntity.addEntity()
     Transform.create(entity, { ...transform, parent })
     return entity
   }, parent)
